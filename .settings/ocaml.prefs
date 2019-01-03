@@ -1,3 +1,5 @@
+compil_mode//_build/main.native=native
 compil_mode//_build/printer.native=native
+compil_mode/main.native=native
 compil_mode/printer.native=native
 eclipse.preferences.version=1
