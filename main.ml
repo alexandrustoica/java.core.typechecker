@@ -1,7 +1,7 @@
 open Expression.Expression
 
 let () =
-	let expression = If(Name("v"), Assignment(Field("v", "f"), Null), KInt(4))
+	let expression = Operation(BoolOperation(Not(KBool(false))))
 	in print_endline (string_of_expression expression)
 	
 	
