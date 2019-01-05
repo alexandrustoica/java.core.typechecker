@@ -21,6 +21,8 @@ module Expression = struct
 		| New of string * variable list
 		| Call of variable * string * variable list
 		| While of variable * expression
+		| Cast of string * variable
+		| InstanceOf of variable * string
 		
 	and operation =
 		| IntOperation of int_operation
@@ -88,6 +90,8 @@ module Expression = struct
 			^ "(" ^ (List.fold_left (fun acc it -> acc ^ " " ^ (string_of_variable it)) "" args) ^ ")"
 		| While (var, expr) -> "whle (" ^ (string_of_variable var) ^ ")" ^ 
 		"{" ^ (string_of_expression expr) ^ "}"
+		| Cast (cls, var) -> "(" ^ cls ^ ") " ^ (string_of_variable var)
+		| InstanceOf (var, cls) -> (string_of_variable var) ^ " instanceOf " ^ cls
 	
 	and string_of_int_operation (op) =
 		match op with

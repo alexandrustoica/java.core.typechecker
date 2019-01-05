@@ -1,7 +1,7 @@
 open Expression.Expression
 
 let () =
-	let expression = Operation(CompareOperation(LT(KInt(2), KInt(4))))
+	let expression = Cast("Object", Name("test"))
 	in print_endline (string_of_expression expression)
 	
 	
