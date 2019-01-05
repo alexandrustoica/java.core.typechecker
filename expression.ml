@@ -18,6 +18,8 @@ module Expression = struct
 		| Composition of expression * expression
 		| If of variable * expression * expression
 		| Operation of operation
+		| New of string * variable list
+		| Call of variable * string * variable list
 		
 	and operation =
 		| IntOperation of int_operation
@@ -66,7 +68,14 @@ module Expression = struct
 			" then " ^ (string_of_expression t) ^
 			" else " ^ (string_of_expression f)
 		| Operation op -> string_of_operation op
-		
+		| New (name, vars) -> 
+			"new " ^ name ^
+			"(" ^ List.fold_left (fun acc it -> it ^ acc) "" 
+			(List.map (fun it -> (string_of_variable it) ^ " ") vars) ^ ")"
+		| Call (var, name, args) ->
+			(string_of_variable var) ^ "." ^ name 
+			^ "(" ^ (List.fold_left (fun acc it -> acc ^ " " ^ (string_of_variable it)) "" args) ^ ")"
+			
 	and string_of_int_operation (op) =
 		match op with
 		| IntPlus (l, r) -> (string_of_expression l) ^ " + " ^ (string_of_expression r)

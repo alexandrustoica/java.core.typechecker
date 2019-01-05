@@ -1,7 +1,7 @@
 open Expression.Expression
 
 let () =
-	let expression = LocalVar(PrimitiveType(CoreInt), Name("test"), KInt(2))
+	let expression = Call(Field("Object", "test"), "test", [Name("test")])
 	in print_endline (string_of_expression expression)
 	
 	
