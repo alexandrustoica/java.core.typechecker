@@ -1,31 +1,15 @@
-open CoreTypes
-open Printer
-open Ast
+open Typ
+open Ast.AST
 
-
-let rec print_ast tree = match tree with
-	| SystemType value -> match value with 
-		| CoreType value -> Printer.type_to_string value
-		| UserDefinedType value -> value
-		| _ -> "Nothing"
-	| _ -> "test";;
-
-
-let () = print_endline 
-	(print_ast (SystemType(CoreType(CoreString))));;
-
-(*
-let () = print_endline (Printer.print (
-	Program([
-		ClassDeclaration(
-			"Main", "Object", [
-				{systemType = CoreType(CoreUnit); name = "a"};
-				{systemType = UserDefinedType("Test"); name = "b"}
-			],[
-				{
-					systemType = CoreType(CoreUnit); name = "functionTest";
-					parameters = [Parameter(CoreType(CoreInt), "param")]; expression = "test"
-				}
-			])
-])));;
-*)
+let () =
+	
+	let parameter = Parameter(PrimitiveType(CoreUnit), "test")
+	in let methodDeclaration = MethodDeclaration(
+		PrimitiveType(CoreInt), "function", [parameter], Expression("TEst"))
+	in let fieldDeclaration = FieldDeclaration (PrimitiveType(CoreInt), "test")
+	in let classDeclaration = ClassDeclaration("Main", "Object",
+	FieldDeclarations([fieldDeclaration]), 
+	MethodDeclarations([methodDeclaration]))
+	
+	in print_endline
+		(to_string (Program(ClassDeclarations([classDeclaration]))))
