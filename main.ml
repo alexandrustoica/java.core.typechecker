@@ -1,7 +1,7 @@
 open Expression.Expression
 
 let () =
-	let expression = Call(Field("Object", "test"), "test", [Name("test")])
+	let expression = Operation(CompareOperation(LT(KInt(2), KInt(4))))
 	in print_endline (string_of_expression expression)
 	
 	

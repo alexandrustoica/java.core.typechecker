@@ -20,11 +20,13 @@ module Expression = struct
 		| Operation of operation
 		| New of string * variable list
 		| Call of variable * string * variable list
+		| While of variable * expression
 		
 	and operation =
 		| IntOperation of int_operation
 		| FloatOperation of float_operation
 		| BoolOperation of bool_operation
+		| CompareOperation of compare_operation
 	
 	and int_operation =
 		| IntPlus of expression * expression
@@ -42,7 +44,16 @@ module Expression = struct
 		| And of expression * expression
 		| Or of expression * expression
 		| Not of expression
-	
+		
+	and compare_operation =
+		| LT of expression * expression
+		| GT of expression * expression
+		| LE of expression * expression
+		| GE of expression * expression
+		| EQ of expression * expression
+		| NE of expression * expression
+
+
 	let string_of_variable (variable: variable) =
 		 match variable with
 		| Name value -> value
@@ -75,7 +86,9 @@ module Expression = struct
 		| Call (var, name, args) ->
 			(string_of_variable var) ^ "." ^ name 
 			^ "(" ^ (List.fold_left (fun acc it -> acc ^ " " ^ (string_of_variable it)) "" args) ^ ")"
-			
+		| While (var, expr) -> "whle (" ^ (string_of_variable var) ^ ")" ^ 
+		"{" ^ (string_of_expression expr) ^ "}"
+	
 	and string_of_int_operation (op) =
 		match op with
 		| IntPlus (l, r) -> (string_of_expression l) ^ " + " ^ (string_of_expression r)
@@ -97,11 +110,21 @@ module Expression = struct
 		| Or (l, r) -> (string_of_expression l) ^ " || " ^ (string_of_expression r)
 		| Not e ->  "!" ^ (string_of_expression e)
 	
+	and string_of_compare_operation (op) =
+		match op with
+		| LT (l, r) -> (string_of_expression l) ^ " < " ^ (string_of_expression r)
+		| GT (l, r) -> (string_of_expression l) ^ " > " ^ (string_of_expression r)
+		| LE (l, r) -> (string_of_expression l) ^ " <= " ^ (string_of_expression r)
+		| GE (l, r) -> (string_of_expression l) ^ " >= " ^ (string_of_expression r)
+		| EQ (l, r) -> (string_of_expression l) ^ " == " ^ (string_of_expression r)
+		| NE (l, r) -> (string_of_expression l) ^ " != " ^ (string_of_expression r)
+	
 	and string_of_operation (op: operation) =
 		match op with
 		| IntOperation operation -> string_of_int_operation operation
 		| FloatOperation operation -> string_of_float_operation operation
 		| BoolOperation operation -> string_of_bool_operation operation
+		| CompareOperation operation -> string_of_compare_operation operation
 	
-	
+
 end
