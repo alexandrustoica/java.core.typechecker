@@ -1,7 +1,7 @@
 open Expression.Expression
 
 let () =
-	let expression = Operation(BoolOperation(Not(KBool(false))))
+	let expression = LocalVar(PrimitiveType(CoreInt), Name("test"), KInt(2))
 	in print_endline (string_of_expression expression)
 	
 	

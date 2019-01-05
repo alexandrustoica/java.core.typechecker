@@ -1,3 +1,5 @@
+open Typ.Type
+
 module Expression = struct
 	
 	type variable =
@@ -12,6 +14,7 @@ module Expression = struct
 		| KBool of bool
 		| Var of variable
 		| Assignment of variable * expression
+		| LocalVar of system_type * variable * expression
 		| Composition of expression * expression
 		| If of variable * expression * expression
 		| Operation of operation
@@ -38,19 +41,19 @@ module Expression = struct
 		| Or of expression * expression
 		| Not of expression
 	
-
 	let string_of_variable (variable: variable) =
 		 match variable with
 		| Name value -> value
 		| Field (variable, field) -> variable ^ "." ^ field
-	
-	
 	
 	let rec string_of_expression (expression: expression) = 
 		match expression with
 		| Null -> "Null"
 		| Void -> ""
 		| Var variable -> string_of_variable variable
+		| LocalVar (typ, var, scope) -> 
+			"{(" ^ (string_of_type typ) ^ " " ^ (string_of_variable var) ^
+			 ")" ^ (string_of_expression scope) ^ "}"
 		| Assignment (variable, expr) -> 
 			(string_of_variable variable) ^ " = " ^ (string_of_expression expr)
 		| KInt value -> string_of_int value
