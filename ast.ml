@@ -1,8 +1,8 @@
 open Typ.Type
+open Expression
 
 module AST = struct
 	
-	type expression = Expression of string
 	
 	type parameter = Parameter of system_type * string
 
@@ -25,8 +25,8 @@ module AST = struct
 		MethodDeclarations of method_declaration list
 	
 	and method_declaration =
-		MethodDeclaration of system_type * string * parameter list * expression
-	
+		MethodDeclaration of system_type * string * parameter list * 
+		Expression.expression
 	
 	let to_string (methods: method_declarations) = match methods with
 	| MethodDeclarations values -> 
