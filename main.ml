@@ -1,8 +1,9 @@
 open Expression.Expression
 open Ast.AST
+open Subtype
 
 
-let first_program =
+let first_class =
 	let first = Assign(VarWithName("c"), Operation(
 		IntOperation(IntPlus(Var(VarWithName("a")), Var(VarWithName("b"))))))
 	in let second = Assign(VarWithField("this", "f1"), Operation(
@@ -14,10 +15,9 @@ let first_program =
 			[Parameter(PrimitiveType(CoreInt), "a"); Parameter(PrimitiveType(CoreInt), "b")]
 	in let methods = [MethodDeclaration(PrimitiveType(CoreInt), "m1", parameters, localBlock)]
 	in let fields = [FieldDeclaration(PrimitiveType(CoreInt), "f1")]
-	in let classes = [ClassDeclaration("A", "Object", fields, methods)]		
-	in (Program(classes))
+	in ClassDeclaration("A", "Object", fields, methods)
 
-let second_program =
+let second_class =
 	let lastAssignment = Assign(VarWithField("this", "f2"), Var(VarWithName("z")))
 	in let last = Compose(lastAssignment, Var(VarWithName("z")))
 	in let thenExpr = Assign(VarWithName("z"), New("A", [VarWithName("m")]))
@@ -41,11 +41,9 @@ let second_program =
 		Parameter(UserDefinedType("A"), "y")]
 	in let methods = [MethodDeclaration(UserDefinedType("A"), "m2", params, funBlock)]
 	in let fields = [FieldDeclaration(UserDefinedType("A"), "f2")]
-	in let classes = [ClassDeclaration("B", "A", fields, methods)]
-	in (Program(classes))
+	in ClassDeclaration("B", "A", fields, methods)
 
-
-let third_program =
+let third_class =
 	let assignmentB = Assign(VarWithName("o1"), New("B", [KInt(0); KNull]))
 	in let assignmentA = Assign(VarWithName("o2"), New("A", [KInt(2)]))
 	in let assignmentC = Assign(VarWithName("o3"), New("A", [KInt(3)]))
@@ -55,11 +53,21 @@ let third_program =
 	in let second = LocalVar(UserDefinedType("A"), VarWithName("o2"), Compose(assignmentA, third))
 	in let first = LocalVar(UserDefinedType("B"), VarWithName("o1"), Compose(assignmentB, second))
 	in let meth = MethodDeclaration(PrimitiveType(CoreUnit), "main", [], first)
-	in let cls = ClassDeclaration("Main", "Object", [], [meth])
-	in (Program([cls]))
+	in ClassDeclaration("Main", "Object", [], [meth])
 
 
 let () =
-	let programs = [first_program; third_program; second_program]
-	in print_endline 
-	(List.fold_left (fun acc it -> (string_of_program it) ^ "\n\n" ^ acc) "" programs)
+	print_endline (
+		List.fold_left (fun acc it -> acc ^ "\n" ^ it) "" 
+		(List.map (fun it -> (Subtype.string_of_relation it)) 
+		(Subtype.relations_in (Program([first_class; second_class; third_class])))))
+
+let _ =	
+	print_endline (
+		string_of_bool (
+		Subtype.is_subtype (Program([first_class; second_class; third_class]))
+		(UserDefinedType("B"))
+		(UserDefinedType("Object"))))
+	
+let _ = print_endline (string_of_program (Program([first_class; second_class; third_class])))
+	
