@@ -1,9 +1,9 @@
 open Expression.Expression
-open Ast.AST
-open Subtype
-open Fieldlist.FieldList
+open Tree.Tree
+open SubType
+open FieldList.FieldList
 open Field.Field
-open Typexpr
+open TypeExpression
 
 let first_class =
 	let first = Assign(VarWithName("c"), Operation(
@@ -65,7 +65,7 @@ let _ =
 		UserDefinedType("A"), VarWithName("a"), Var(VarWithName("a")))
 	
 	in print_endline (SystemType.Type.string_of_type (
-		Typexpr.type_of_expression prog [] expression))
+		TypeExpression.type_of_expression prog [] expression))
 		
 	
 

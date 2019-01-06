@@ -1,7 +1,7 @@
 open Expression.Expression
 open SystemType.Type
-open Ast.AST
-open Fieldlist.FieldList
+open Tree.Tree
+open FieldList.FieldList
 open Field.Field
 
 let find_type_of (var: string) (_in: (system_type * string) list): system_type =

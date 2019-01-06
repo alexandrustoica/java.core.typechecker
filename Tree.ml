@@ -2,7 +2,7 @@ open SystemType.Type
 open Expression
 open Field.Field
 
-module AST = struct
+module Tree = struct
 	
 	type parameter = Parameter of system_type * string
 	

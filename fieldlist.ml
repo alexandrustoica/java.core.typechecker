@@ -1,6 +1,6 @@
-open Ast.AST
+open Tree.Tree
 open SystemType.Type
-open Subtype.Subtype
+open SubType
 open Field.Field
 
 module FieldList = struct
@@ -31,7 +31,7 @@ module FieldList = struct
 		match class_name with
 		| "Object" -> []
 		| _ -> List.flatten (List.map (fun typ -> (fields_for typ prog)) (
-								(Subtype.Subtype.super_types_of (UserDefinedType(class_name)) prog) @
+								(SubType.super_types_of (UserDefinedType(class_name)) prog) @
 								[UserDefinedType(class_name)]))
 	
 end
