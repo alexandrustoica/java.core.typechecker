@@ -2,4 +2,3 @@
 /usr/local/lib/ocaml
 test
 tests
-_build/tests

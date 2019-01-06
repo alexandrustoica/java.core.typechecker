@@ -65,8 +65,7 @@ let _ =
 		UserDefinedType("A"), VarWithName("a"), Var(VarWithName("a")))
 	
 	in print_endline (SystemType.Type.string_of_type (
-		TypeExpression.type_of_expression prog [] expression))
-		
+		TypeExpression.type_of expression prog))
 	
 
 (* let () =                                                                                      *)
