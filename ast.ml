@@ -8,7 +8,9 @@ module AST = struct
 	type program = Program of class_declaration list
 	
 	and class_declaration =
-		| ClassDeclaration of (string * string *
+		| InheritanceDeclaration of (string * string *
+		field_declaration list * method_declaration list)
+		| ClassDeclaration of (string * 
 		field_declaration list * method_declaration list)
 	
 	and field_declaration =
@@ -36,8 +38,13 @@ module AST = struct
 		| FieldDeclaration (typ, name) -> (string_of_type typ) ^ " " ^ name ^ ";"
 	
 	let string_of_class (cls: class_declaration) = match cls with
-		| ClassDeclaration (name, super, fields, methods) ->
-				"class " ^ name ^ " extends " ^ super ^ "{\n" ^
+	| InheritanceDeclaration (name, super, fields, methods) ->
+			"class " ^ name ^ " extends " ^ super ^ "{\n" ^
+				List.fold_left (fun acc it -> (string_of_field it) ^ "\n" ^ acc) "" fields ^
+				List.fold_left (fun acc it -> acc ^ "\n" ^ (string_of_method it)) "" methods ^
+				"\n}"
+	| ClassDeclaration (name, fields, methods) ->
+				"class " ^ name ^ "{\n" ^
 				List.fold_left (fun acc it -> (string_of_field it) ^ "\n" ^ acc) "" fields ^
 				List.fold_left (fun acc it -> acc ^ "\n" ^ (string_of_method it)) "" methods ^
 				"\n}"

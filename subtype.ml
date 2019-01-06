@@ -19,7 +19,9 @@ module Subtype = struct
 	
 	let relations_in (cls: class_declaration) =
 		match cls with
-		| ClassDeclaration (base, super, _, _) ->
+		| ClassDeclaration (base, _, _) ->
+				Relation(UserDefinedType(base), UserDefinedType("Object"))
+		| InheritanceDeclaration (base, super, _, _) ->
 				Relation(UserDefinedType(base), UserDefinedType(super))
 	
 	let relations_in (prog: program): relation list =
@@ -42,12 +44,11 @@ module Subtype = struct
 		match relations with
 		| [] -> acc
 		| h:: t -> let new_relations = (match h with
-					| Relation (a, b) -> (List.map (fun it -> Relation(a, it)) (super_types_for b storage)))
+						| Relation (a, b) -> (List.map (fun it -> Relation(a, it)) (super_types_for b storage)))
 				in extend_relations storage t (acc @ [h] @ new_relations)
 	
 	let extend (relations: relation list): relation list =
 		extend_relations relations relations []
-	
 	
 	let is_subtype
 			(in_prog: program)

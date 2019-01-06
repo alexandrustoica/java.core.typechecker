@@ -15,7 +15,7 @@ let first_class =
 			[Parameter(PrimitiveType(CoreInt), "a"); Parameter(PrimitiveType(CoreInt), "b")]
 	in let methods = [MethodDeclaration(PrimitiveType(CoreInt), "m1", parameters, localBlock)]
 	in let fields = [FieldDeclaration(PrimitiveType(CoreInt), "f1")]
-	in ClassDeclaration("A", "Object", fields, methods)
+	in ClassDeclaration("A", fields, methods)
 
 let second_class =
 	let lastAssignment = Assign(VarWithField("this", "f2"), Var(VarWithName("z")))
@@ -41,7 +41,7 @@ let second_class =
 		Parameter(UserDefinedType("A"), "y")]
 	in let methods = [MethodDeclaration(UserDefinedType("A"), "m2", params, funBlock)]
 	in let fields = [FieldDeclaration(UserDefinedType("A"), "f2")]
-	in ClassDeclaration("B", "A", fields, methods)
+	in InheritanceDeclaration("B", "A", fields, methods)
 
 let third_class =
 	let assignmentB = Assign(VarWithName("o1"), New("B", [KInt(0); KNull]))
@@ -53,7 +53,7 @@ let third_class =
 	in let second = LocalVar(UserDefinedType("A"), VarWithName("o2"), Compose(assignmentA, third))
 	in let first = LocalVar(UserDefinedType("B"), VarWithName("o1"), Compose(assignmentB, second))
 	in let meth = MethodDeclaration(PrimitiveType(CoreUnit), "main", [], first)
-	in ClassDeclaration("Main", "Object", [], [meth])
+	in ClassDeclaration("Main", [], [meth])
 
 
 let () =
