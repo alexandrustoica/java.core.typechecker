@@ -62,7 +62,7 @@ let prog = (Program([first_class; second_class; third_class]))
 
 let _ =
 	let expression = LocalVar(
-		PrimitiveType(CoreInt), VarWithName("a"), Assign(VarWithName("a"), Var(KInt(2))))
+		UserDefinedType("A"), VarWithName("a"), Compose(Var(KFloat(2.0)), Var(VarWithField("a", "f1"))))
 	in print_endline (SystemType.Type.string_of_type (
 		TypeExpression.type_of expression prog))
 	

@@ -49,6 +49,7 @@ let rec type_of_expression
 			(type_of_variable program environment var) 
 			(type_of_expression program environment expr)) 
 			then PrimitiveType(CoreUnit) else (raise ErrorInvalidTypeEq) 
+	| Compose (lexpr, rexpr) -> (type_of_expression program environment rexpr)
 	| _ -> PrimitiveType(CoreInt)
 	
 let type_of (expression: expression) (_in: program): system_type = 
