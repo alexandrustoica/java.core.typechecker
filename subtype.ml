@@ -50,6 +50,11 @@ module Subtype = struct
 	let extend (relations: relation list): relation list =
 		extend_relations relations relations []
 	
+	let super_types_of
+		(typ: system_type)
+		(in_prog: program): system_type list =
+			(super_types_for typ (extend (relations_in in_prog)))
+	
 	let is_subtype
 			(in_prog: program)
 			(base: system_type)
