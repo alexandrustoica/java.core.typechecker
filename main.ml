@@ -57,10 +57,11 @@ let third_class =
 
 
 let () =
-	print_endline (
+	let relations = Subtype.relations_in (Program([first_class; second_class; third_class]))
+	in print_endline (
 		List.fold_left (fun acc it -> acc ^ "\n" ^ it) "" 
 		(List.map (fun it -> (Subtype.string_of_relation it)) 
-		(Subtype.relations_in (Program([first_class; second_class; third_class])))))
+		(Subtype.extend relations)))
 
 let _ =	
 	print_endline (
