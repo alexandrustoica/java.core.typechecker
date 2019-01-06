@@ -23,7 +23,7 @@ module Expression = struct
 		| While of variable * expression
 		| Cast of string * variable
 		| InstanceOf of variable * string
-		
+	
 	and operation =
 		| IntOperation of int_operation
 		| FloatOperation of float_operation
@@ -41,12 +41,12 @@ module Expression = struct
 		| FloatMinus of expression * expression
 		| FloatDivide of expression * expression
 		| FloatTimes of expression * expression
-		
+	
 	and bool_operation =
 		| And of expression * expression
 		| Or of expression * expression
 		| Not of expression
-		
+	
 	and compare_operation =
 		| LT of expression * expression
 		| GT of expression * expression
@@ -54,42 +54,41 @@ module Expression = struct
 		| GE of expression * expression
 		| EQ of expression * expression
 		| NE of expression * expression
-
-
+	
 	let string_of_variable (variable: variable) =
-		 match variable with
+		match variable with
 		| Name value -> value
 		| Field (variable, field) -> variable ^ "." ^ field
 	
-	let rec string_of_expression (expression: expression) = 
+	let rec string_of_expression (expression: expression) =
 		match expression with
 		| Null -> "Null"
 		| Void -> ""
 		| Var variable -> string_of_variable variable
-		| LocalVar (typ, var, scope) -> 
-			"{(" ^ (string_of_type typ) ^ " " ^ (string_of_variable var) ^
-			 ")" ^ (string_of_expression scope) ^ "}"
-		| Assignment (variable, expr) -> 
-			(string_of_variable variable) ^ " = " ^ (string_of_expression expr)
+		| LocalVar (typ, var, scope) ->
+				"{ (" ^ (string_of_type typ) ^ " " ^ (string_of_variable var) ^
+				")\n" ^ (string_of_expression scope) ^ " }"
+		| Assignment (variable, expr) ->
+				(string_of_variable variable) ^ " = " ^ (string_of_expression expr)
 		| KInt value -> string_of_int value
 		| KFloat value -> string_of_float value
 		| KBool value -> string_of_bool value
-		| Composition (left, right) -> 
-			(string_of_expression left) ^ ";" ^ (string_of_expression right)
-		| If (condition, t, f) -> 
-			"if(" ^ (string_of_variable condition) ^ ")" ^
-			" then " ^ (string_of_expression t) ^
-			" else " ^ (string_of_expression f)
+		| Composition (left, right) ->
+				(string_of_expression left) ^ " ; " ^ (string_of_expression right)
+		| If (condition, t, f) ->
+				"if(" ^ (string_of_variable condition) ^ ")" ^
+				" then " ^ (string_of_expression t) ^
+				" else " ^ (string_of_expression f)
 		| Operation op -> string_of_operation op
-		| New (name, vars) -> 
-			"new " ^ name ^
-			"(" ^ List.fold_left (fun acc it -> it ^ acc) "" 
-			(List.map (fun it -> (string_of_variable it) ^ " ") vars) ^ ")"
+		| New (name, vars) ->
+				"new " ^ name ^
+				"(" ^ List.fold_left (fun acc it -> it ^ acc) ""
+					(List.map (fun it -> (string_of_variable it) ^ " ") vars) ^ ")"
 		| Call (var, name, args) ->
-			(string_of_variable var) ^ "." ^ name 
-			^ "(" ^ (List.fold_left (fun acc it -> acc ^ " " ^ (string_of_variable it)) "" args) ^ ")"
-		| While (var, expr) -> "whle (" ^ (string_of_variable var) ^ ")" ^ 
-		"{" ^ (string_of_expression expr) ^ "}"
+				(string_of_variable var) ^ "." ^ name
+				^ "(" ^ (List.fold_left (fun acc it -> acc ^ " " ^ (string_of_variable it)) "" args) ^ ")"
+		| While (var, expr) -> "whle (" ^ (string_of_variable var) ^ ")" ^
+				" { " ^ (string_of_expression expr) ^ " } "
 		| Cast (cls, var) -> "(" ^ cls ^ ") " ^ (string_of_variable var)
 		| InstanceOf (var, cls) -> (string_of_variable var) ^ " instanceOf " ^ cls
 	
@@ -99,7 +98,6 @@ module Expression = struct
 		| IntMinus (l, r) -> (string_of_expression l) ^ " - " ^ (string_of_expression r)
 		| IntDivide (l, r) -> (string_of_expression l) ^ " / " ^ (string_of_expression r)
 		| IntTimes (l, r) -> (string_of_expression l) ^ " * " ^ (string_of_expression r)
-	
 	
 	and string_of_float_operation (op) =
 		match op with
@@ -112,7 +110,7 @@ module Expression = struct
 		match op with
 		| And (l, r) -> (string_of_expression l) ^ " && " ^ (string_of_expression r)
 		| Or (l, r) -> (string_of_expression l) ^ " || " ^ (string_of_expression r)
-		| Not e ->  "!" ^ (string_of_expression e)
+		| Not e -> "!" ^ (string_of_expression e)
 	
 	and string_of_compare_operation (op) =
 		match op with
@@ -130,5 +128,4 @@ module Expression = struct
 		| BoolOperation operation -> string_of_bool_operation operation
 		| CompareOperation operation -> string_of_compare_operation operation
 	
-
 end
