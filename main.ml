@@ -59,27 +59,32 @@ let third_class =
 
 
 let _ =
-	print_endline (Typ.Type.string_of_type (Typexpr.type_of_expression (Var(KFloat(2.2)))))
+	let expression = LocalVar(
+		PrimitiveType(CoreInt), VarWithName("a"), Var(KInt(3)))
+	in print_endline (Typ.Type.string_of_type (
+		Typexpr.type_of_expression [] expression))
+		
+	
 
-let () =
-	let relations = Subtype.relations_in (Program([first_class; second_class; third_class]))
-	in print_endline (
-			List.fold_left (fun acc it -> acc ^ "\n" ^ it) ""
-				(List.map (fun it -> (Subtype.string_of_relation it))
-						(Subtype.extend relations)))
+(* let () =                                                                                      *)
+(* 	let relations = Subtype.relations_in (Program([first_class; second_class; third_class]))    *)
+(* 	in print_endline (                                                                          *)
+(* 			List.fold_left (fun acc it -> acc ^ "\n" ^ it) ""                                       *)
+(* 				(List.map (fun it -> (Subtype.string_of_relation it))                                 *)
+(* 						(Subtype.extend relations)))                                                      *)
 
-let _ =
-	print_endline (
-			string_of_bool (
-					Subtype.is_subtype (Program([first_class; second_class; third_class]))
-						(UserDefinedType("B"))
-						(UserDefinedType("Object"))))
+(* let _ =                                                                                       *)
+(* 	print_endline (                                                                             *)
+(* 			string_of_bool (                                                                        *)
+(* 					Subtype.is_subtype (Program([first_class; second_class; third_class]))              *)
+(* 						(UserDefinedType("B"))                                                            *)
+(* 						(UserDefinedType("Object"))))                                                     *)
 
-let _ = print_endline (string_of_program (Program([first_class; second_class; third_class])))
+(* let _ = print_endline (string_of_program (Program([first_class; second_class; third_class]))) *)
 
-let print_fields (fields: field_declaration list): string =
-	List.fold_left (fun acc it -> acc ^ "\n" ^ (string_of_field it)) "" fields
+(* let print_fields (fields: field_declaration list): string =                                   *)
+(* 	List.fold_left (fun acc it -> acc ^ "\n" ^ (string_of_field it)) "" fields                  *)
 
-let _ =
-	print_endline
-		(print_fields (fields_in (Program([first_class; second_class; third_class])) "B"))
+(* let _ =                                                                                       *)
+(* 	print_endline                                                                               *)
+(* 		(print_fields (fields_in (Program([first_class; second_class; third_class])) "B"))        *)
