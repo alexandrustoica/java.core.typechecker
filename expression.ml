@@ -3,19 +3,19 @@ open Typ.Type
 module Expression = struct
 	
 	type variable =
-		| Name of string
-		| Field of string * string
-	
-	type expression =
-		| Null
-		| Void
+		| KNull
 		| KInt of int
 		| KFloat of float
 		| KBool of bool
+		| VarWithName of string
+		| VarWithField of string * string
+	
+	type expression =
+		| Void
 		| Var of variable
-		| Assignment of variable * expression
+		| Assign of variable * expression
 		| LocalVar of system_type * variable * expression
-		| Composition of expression * expression
+		| Compose of expression * expression
 		| If of variable * expression * expression
 		| Operation of operation
 		| New of string * variable list
@@ -57,36 +57,40 @@ module Expression = struct
 	
 	let string_of_variable (variable: variable) =
 		match variable with
-		| Name value -> value
-		| Field (variable, field) -> variable ^ "." ^ field
+		| KNull -> "Null"
+		| KInt value -> string_of_int value
+		| KFloat value -> string_of_float value
+		| KBool value -> string_of_bool value
+		| VarWithName value -> value
+		| VarWithField (variable, field) -> variable ^ "." ^ field
 	
 	let rec string_of_expression (expression: expression) =
 		match expression with
-		| Null -> "Null"
 		| Void -> ""
 		| Var variable -> string_of_variable variable
 		| LocalVar (typ, var, scope) ->
 				"{ (" ^ (string_of_type typ) ^ " " ^ (string_of_variable var) ^
-				")\n" ^ (string_of_expression scope) ^ " }"
-		| Assignment (variable, expr) ->
+				") " ^ (string_of_expression scope) ^ " }"
+		| Assign (variable, expr) ->
 				(string_of_variable variable) ^ " = " ^ (string_of_expression expr)
-		| KInt value -> string_of_int value
-		| KFloat value -> string_of_float value
-		| KBool value -> string_of_bool value
-		| Composition (left, right) ->
+		| Compose (left, right) ->
 				(string_of_expression left) ^ " ; " ^ (string_of_expression right)
 		| If (condition, t, f) ->
 				"if(" ^ (string_of_variable condition) ^ ")" ^
 				" then " ^ (string_of_expression t) ^
 				" else " ^ (string_of_expression f)
 		| Operation op -> string_of_operation op
-		| New (name, vars) ->
+		| New (name, []) -> "new " ^ name ^ "()"
+		| New (name, h::t) ->
 				"new " ^ name ^
-				"(" ^ List.fold_left (fun acc it -> it ^ acc) ""
-					(List.map (fun it -> (string_of_variable it) ^ " ") vars) ^ ")"
-		| Call (var, name, args) ->
+				"(" ^ List.fold_left (fun acc it -> acc ^ "," ^ (string_of_variable it))
+				 (string_of_variable h) t ^ ")"
+		| Call (var, name, []) -> (string_of_variable var) ^ "." ^ name ^ "()"
+		| Call (var, name, h::t) ->
 				(string_of_variable var) ^ "." ^ name
-				^ "(" ^ (List.fold_left (fun acc it -> acc ^ " " ^ (string_of_variable it)) "" args) ^ ")"
+				^ "(" ^ (List.fold_left 
+				(fun acc it -> acc ^ "," ^ (string_of_variable it)) 
+				(string_of_variable h) t) ^ ")"
 		| While (var, expr) -> "whle (" ^ (string_of_variable var) ^ ")" ^
 				" { " ^ (string_of_expression expr) ^ " } "
 		| Cast (cls, var) -> "(" ^ cls ^ ") " ^ (string_of_variable var)
