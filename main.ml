@@ -2,7 +2,7 @@ open Expression.Expression
 open Ast.AST
 
 
-let print_first_program =
+let first_program =
 	let first = Assign(VarWithName("c"), Operation(
 		IntOperation(IntPlus(Var(VarWithName("a")), Var(VarWithName("b"))))))
 	in let second = Assign(VarWithField("this", "f1"), Operation(
@@ -15,26 +15,51 @@ let print_first_program =
 	in let methods = [MethodDeclaration(PrimitiveType(CoreInt), "m1", parameters, localBlock)]
 	in let fields = [FieldDeclaration(PrimitiveType(CoreInt), "f1")]
 	in let classes = [ClassDeclaration("A", "Object", fields, methods)]		
-	in print_endline (string_of_program (Program(classes)))
+	in (Program(classes))
+
+let second_program =
+	let lastAssignment = Assign(VarWithField("this", "f2"), Var(VarWithName("z")))
+	in let last = Compose(lastAssignment, Var(VarWithName("z")))
+	in let thenExpr = Assign(VarWithName("z"), New("A", [VarWithName("m")]))
+	in let elseExpr = Assign(VarWithName("z"), New("A", [VarWithName("n")]))
+	in let ifExpr = If(VarWithName("m"), thenExpr, elseExpr)
+	in let mAssign = Assign(VarWithName("m"), Operation(CompareOperation(GT(
+		Operation(IntOperation(IntMinus(
+				Var(VarWithField("x", "f1")), Var(VarWithField("y", "f1"))))),
+				Var(VarWithName("n"))))))
+	in let first = Assign(VarWithName("n"), 
+		Operation(IntOperation(IntMinus(
+			Call(VarWithName("x"), "m1", [KInt(1); KInt(2)]),
+			Call(VarWithName("y"), "m2", [KInt(2); KInt(1)])))))
+	in let localNestedBlock =
+		LocalVar(PrimitiveType(CoreBool), VarWithName("m"), Compose(mAssign, ifExpr))
+	in let expression = Compose(first, Compose(localNestedBlock, last))
+	in let block = LocalVar(PrimitiveType(CoreInt), VarWithName("n"), expression)
+	in let funBlock = LocalVar(UserDefinedType("A"), VarWithName("z"), block)
+	in let params = [
+		Parameter(UserDefinedType("A"), "x"); 
+		Parameter(UserDefinedType("A"), "y")]
+	in let methods = [MethodDeclaration(UserDefinedType("A"), "m2", params, funBlock)]
+	in let fields = [FieldDeclaration(UserDefinedType("A"), "f2")]
+	in let classes = [ClassDeclaration("B", "A", fields, methods)]
+	in (Program(classes))
 
 
-let print_second_program =
+let third_program =
 	let assignmentB = Assign(VarWithName("o1"), New("B", [KInt(0); KNull]))
-	
 	in let assignmentA = Assign(VarWithName("o2"), New("A", [KInt(2)]))
 	in let assignmentC = Assign(VarWithName("o3"), New("A", [KInt(3)]))
-
 	in let call = Call(VarWithName("o1"), "m2", [VarWithName("o2"); VarWithName("m3")]) 
 	in let last = Assign(VarWithName("o2"), call)
-
 	in let third = LocalVar(UserDefinedType("A"), VarWithName("o3"), Compose(assignmentC, last))
 	in let second = LocalVar(UserDefinedType("A"), VarWithName("o2"), Compose(assignmentA, third))
 	in let first = LocalVar(UserDefinedType("B"), VarWithName("o1"), Compose(assignmentB, second))
-
 	in let meth = MethodDeclaration(PrimitiveType(CoreUnit), "main", [], first)
 	in let cls = ClassDeclaration("Main", "Object", [], [meth])
-	
-	in print_endline (string_of_program (Program([cls])))
+	in (Program([cls]))
 
 
-let () = print_second_program
+let () =
+	let programs = [first_program; third_program; second_program]
+	in print_endline 
+	(List.fold_left (fun acc it -> (string_of_program it) ^ "\n\n" ^ acc) "" programs)
