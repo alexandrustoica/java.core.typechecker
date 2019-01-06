@@ -1,6 +1,7 @@
 open Ast.AST
-open Typ.Type
+open SystemType.Type
 open Subtype.Subtype
+open Field.Field
 
 module FieldList = struct
 	

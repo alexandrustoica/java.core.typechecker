@@ -1,5 +1,5 @@
 open Ast.AST
-open Typ.Type
+open SystemType.Type
 open Expression.Expression
 
 module Subtype = struct
@@ -9,8 +9,8 @@ module Subtype = struct
 	let compare (left: relation) (right: relation) : bool =
 		match (left, right) with
 		| ((Relation (ll, rl)), (Relation (lr, rr))) ->
-				(Typ.Type.compare ll lr) &&
-				(Typ.Type.compare rl rr)
+				(SystemType.Type.compare ll lr) &&
+				(SystemType.Type.compare rl rr)
 	
 	let string_of_relation (relation: relation): string =
 		match relation with
@@ -34,7 +34,7 @@ module Subtype = struct
 		List.map (fun it -> match it with Relation (_, r) -> r)
 			(List.filter (fun it ->
 								match it with
-								| Relation (l, _) -> Typ.Type.compare l typ)
+								| Relation (l, _) -> SystemType.Type.compare l typ)
 					in_relations)
 	
 	let rec extend_relations
@@ -62,5 +62,5 @@ module Subtype = struct
 		let relation = Relation(base, super)
 		in let relations = (relations_in in_prog)
 		in (List.exists (fun it -> compare it relation) (extend relations)) ||
-		(Typ.Type.compare base super)
+		(SystemType.Type.compare base super)
 end

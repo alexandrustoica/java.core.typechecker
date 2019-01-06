@@ -1,5 +1,6 @@
-open Typ.Type
+open SystemType.Type
 open Expression
+open Field.Field
 
 module AST = struct
 	
@@ -12,9 +13,6 @@ module AST = struct
 		field_declaration list * method_declaration list)
 		| ClassDeclaration of (string * 
 		field_declaration list * method_declaration list)
-	
-	and field_declaration =
-		|	FieldDeclaration of system_type * string
 	
 	and method_declaration =
 		|	MethodDeclaration of system_type * string *

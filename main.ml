@@ -2,6 +2,7 @@ open Expression.Expression
 open Ast.AST
 open Subtype
 open Fieldlist.FieldList
+open Field.Field
 open Typexpr
 
 let first_class =
@@ -57,12 +58,14 @@ let third_class =
 	in ClassDeclaration("Main", [], [meth])
 
 
+let prog = (Program([first_class; second_class; third_class]))
 
 let _ =
 	let expression = LocalVar(
-		PrimitiveType(CoreInt), VarWithName("a"), Var(KInt(3)))
-	in print_endline (Typ.Type.string_of_type (
-		Typexpr.type_of_expression [] expression))
+		UserDefinedType("A"), VarWithName("a"), Var(VarWithName("a")))
+	
+	in print_endline (SystemType.Type.string_of_type (
+		Typexpr.type_of_expression prog [] expression))
 		
 	
 
@@ -80,7 +83,7 @@ let _ =
 (* 						(UserDefinedType("B"))                                                            *)
 (* 						(UserDefinedType("Object"))))                                                     *)
 
-(* let _ = print_endline (string_of_program (Program([first_class; second_class; third_class]))) *)
+let _ = print_endline (string_of_program (Program([first_class; second_class; third_class])))
 
 (* let print_fields (fields: field_declaration list): string =                                   *)
 (* 	List.fold_left (fun acc it -> acc ^ "\n" ^ (string_of_field it)) "" fields                  *)
