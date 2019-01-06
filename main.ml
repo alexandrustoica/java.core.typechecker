@@ -2,6 +2,7 @@ open Expression.Expression
 open Ast.AST
 open Subtype
 open Fieldlist.FieldList
+open Typexpr
 
 let first_class =
 	let first = Assign(VarWithName("c"), Operation(
@@ -54,6 +55,11 @@ let third_class =
 	in let first = LocalVar(UserDefinedType("B"), VarWithName("o1"), Compose(assignmentB, second))
 	in let meth = MethodDeclaration(PrimitiveType(CoreUnit), "main", [], first)
 	in ClassDeclaration("Main", [], [meth])
+
+
+
+let _ =
+	print_endline (Typ.Type.string_of_type (Typexpr.type_of_expression (Var(KFloat(2.2)))))
 
 let () =
 	let relations = Subtype.relations_in (Program([first_class; second_class; third_class]))
