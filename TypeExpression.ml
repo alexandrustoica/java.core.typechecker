@@ -4,6 +4,8 @@ open Program
 open ClassFields
 open Field
 open Environment
+open Record 
+
 
 let type_of_variable
 		(program: program)
@@ -37,16 +39,16 @@ let rec type_of_expression
 		(program: program)
 		(environment: environment)
 		(expression: expression): system_type =
-	let _ = print_endline (string_of environment)
+	let _ = print_endline (Environment.string_of environment)
 	in match expression with
 	| Void -> PrimitiveType(CoreUnit)
 	| Var variable -> (type_of_variable program environment variable)
 	| LocalVar (typ, var, expr) ->
-			type_of_expression program (insert_in environment (to_record typ var)) expr
+			type_of_expression program (insert_in environment (record_of typ var)) expr
 	| Assign (var, expr) ->
-			if (SubType.is_subtype program
+			if (RelatedType.is_related
 					(type_of_variable program environment var)
-					(type_of_expression program environment expr))
+					(type_of_expression program environment expr) program)
 			then PrimitiveType(CoreUnit) else (raise ErrorInvalidTypeEq)
 	| Compose (lexpr, rexpr) -> (type_of_expression program environment rexpr)
 	| Operation op -> type_of_operation program environment op

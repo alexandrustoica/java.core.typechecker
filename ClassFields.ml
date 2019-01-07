@@ -1,6 +1,5 @@
 open Program
 open Type
-open SubType
 open Field
 open Class 
 
@@ -21,5 +20,5 @@ let fields_in (prog: program) (class_name: string) : field_declaration list =
 	match class_name with
 	| "Object" -> []
 	| _ -> List.flatten (List.map (fun typ -> (fields_for typ prog)) (
-							(SubType.super_types_of (UserDefinedType(class_name)) prog) @
+							(RelatedType.related_with (UserDefinedType(class_name)) prog) @
 							[UserDefinedType(class_name)]))

@@ -4,3 +4,9 @@ test
 tests
 tree
 _build/tree
+classes
+_build/classes
+environment
+_build/environment
+relation
+_build/relation

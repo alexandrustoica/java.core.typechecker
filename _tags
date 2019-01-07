@@ -1,2 +1,5 @@
 true: package(oUnit), traverse
 "tree": include
+"classes": include
+"environment": include
+"relation": include
