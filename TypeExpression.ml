@@ -39,6 +39,8 @@ exception ErrorInvalidTypeEq
 exception ErrorInvalidNewType
 exception UnableToCastType
 exception UnrelatedTypeException
+exception UnableToCastVariableToBool
+exception UnableToCompareUserDefinedTypes
 
 let is_user_defined (typ: string) (_in: program): bool =
 		List.exists (fun it -> (string_of_type it) = typ) (Program.user_types_in _in)
@@ -76,6 +78,9 @@ let rec type_of_expression
 		(RelatedType.is_connected (UserDefinedType(typ_as_string)) 
 		(type_of_variable program environment var) program)) then
 			(PrimitiveType(CoreBool)) else (raise UnrelatedTypeException) 
+	| While (var, expr) -> 
+		if (Type.compare (type_of_variable program environment var) (PrimitiveType(CoreBool))) then
+			let result = (type_of_expression program environment expr) in (PrimitiveType(CoreBool)) else (raise UnableToCastVariableToBool)
 	| _ -> PrimitiveType(CoreInt)
 	
 and type_of_operation
@@ -133,15 +138,19 @@ and type_of_compare_operation
 	(environment: environment)
 	(operation: compare_operation): system_type =
 	let type_of = type_of_expression program environment
+	in let check a b = (not ((is_user_defined (Type.string_of_type a) program) && 
+		(is_user_defined (Type.string_of_type b) program)))
 	in let type_result = PrimitiveType(CoreBool)
 	in let validate (cmp: system_type) = validate_types_eq cmp type_result 
+	in let check_exists a b c = (if (check a c) then (validate a b c) 
+			else (raise UnableToCompareUserDefinedTypes))
 	in match operation with
-	| LT (l, r) -> let type_of_l = (type_of l) in validate type_of_l type_of_l (type_of r)
-	| GT (l, r) -> let type_of_l = (type_of l) in validate type_of_l type_of_l (type_of r)
-	| LE (l, r) -> let type_of_l = (type_of l) in validate type_of_l type_of_l (type_of r)
-	| GE (l, r) -> let type_of_l = (type_of l) in validate type_of_l type_of_l (type_of r)
-	| EQ (l, r) -> let type_of_l = (type_of l) in validate type_of_l type_of_l (type_of r)
-	| NE (l, r) -> let type_of_l = (type_of l) in validate type_of_l type_of_l (type_of r)
+	| LT (l, r) -> let type_of_l = (type_of l) in check_exists type_of_l type_of_l (type_of r)
+	| GT (l, r) -> let type_of_l = (type_of l) in check_exists type_of_l type_of_l (type_of r)
+	| LE (l, r) -> let type_of_l = (type_of l) in check_exists type_of_l type_of_l (type_of r)
+	| GE (l, r) -> let type_of_l = (type_of l) in check_exists type_of_l type_of_l (type_of r)
+	| EQ (l, r) -> let type_of_l = (type_of l) in check_exists type_of_l type_of_l (type_of r)
+	| NE (l, r) -> let type_of_l = (type_of l) in check_exists type_of_l type_of_l (type_of r)
 
 and validate_types_eq
 		(compareWith: system_type)

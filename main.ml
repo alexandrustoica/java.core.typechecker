@@ -10,7 +10,8 @@ let prog = (Program([A.cls; B.cls; M.cls]))
 
 let _ =
 	let expression = 
-		LocalVar(UserDefinedType("A"), VarWithName("a"), InstanceOf(VarWithName("a"), "B"))
+		LocalVar(UserDefinedType("A"), VarWithName("a"),
+		Operation(CompareOperation(LT(Var(VarWithName("a")), Var(VarWithName("a"))))))
 	in print_endline (Type.string_of_type (
 		TypeExpression.type_of expression prog))
 	
