@@ -37,7 +37,8 @@ let fields_to_records
 
 exception ErrorInvalidTypeEq
 exception ErrorInvalidNewType
-exception ImposibleToCastType
+exception UnableToCastType
+exception UnrelatedTypeException
 
 let is_user_defined (typ: string) (_in: program): bool =
 		List.exists (fun it -> (string_of_type it) = typ) (Program.user_types_in _in)
@@ -69,8 +70,12 @@ let rec type_of_expression
 		if ((is_user_defined typ_as_string program) && 
 		(RelatedType.is_connected (UserDefinedType(typ_as_string)) 
 		(type_of_variable program environment var) program)) then
-			UserDefinedType(typ_as_string) else (raise ImposibleToCastType)
-		
+			UserDefinedType(typ_as_string) else (raise UnableToCastType)
+	| InstanceOf (var, typ_as_string) -> 
+		if((is_user_defined typ_as_string program) &&
+		(RelatedType.is_connected (UserDefinedType(typ_as_string)) 
+		(type_of_variable program environment var) program)) then
+			(PrimitiveType(CoreBool)) else (raise UnrelatedTypeException) 
 	| _ -> PrimitiveType(CoreInt)
 	
 and type_of_operation
