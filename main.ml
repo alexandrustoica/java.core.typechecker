@@ -1,9 +1,12 @@
-open Expression.Expression
-open Tree.Tree
+open Expression
+open Program
 open SubType
-open FieldList.FieldList
-open Field.Field
+open FieldList
+open Field
 open TypeExpression
+open Parameter
+open Method 
+open Class
 
 let first_class =
 	let first = Assign(VarWithName("c"), Operation(
@@ -63,7 +66,7 @@ let prog = (Program([first_class; second_class; third_class]))
 let _ =
 	let expression = 
 		LocalVar(UserDefinedType("A"), VarWithName("a"), Compose(Var(KFloat(2.0)), Var(VarWithField("a", "f1"))))
-	in print_endline (SystemType.Type.string_of_type (
+	in print_endline (SystemType.string_of_type (
 		TypeExpression.type_of expression prog))
 	
 

@@ -1,9 +1,9 @@
-open Expression.Expression
-open SystemType.Type
-open Tree.Tree
-open FieldList.FieldList
-open Field.Field
-open Environment.Environment
+open Expression
+open SystemType
+open Program
+open FieldList
+open Field
+open Environment
 
 let type_of_variable
 		(program: program)
@@ -121,8 +121,8 @@ and validate_types_eq
 		(result: system_type)
 		(l: system_type)
 		(r: system_type): system_type =
-	if ((SystemType.Type.compare l compareWith) &&
-		(SystemType.Type.compare r compareWith)) then result
+	if ((SystemType.compare l compareWith) &&
+		(SystemType.compare r compareWith)) then result
 	else (raise ErrorInvalidTypeEq)
 
 let type_of (expression: expression) (_in: program): system_type =
