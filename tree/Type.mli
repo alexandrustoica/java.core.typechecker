@@ -10,3 +10,4 @@ val compare: typ -> typ -> bool
 val compare: system_type -> system_type -> bool
 val string_of_type: typ -> string
 val string_of_type: system_type -> string
+val string_of_types: system_type list -> string

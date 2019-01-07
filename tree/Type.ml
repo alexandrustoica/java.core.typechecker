@@ -34,8 +34,15 @@ let string_of_type
 	| CoreFloat -> "Float"
 
 let string_of_type
-		(typ: system_type) =
+		(typ: system_type): string =
 	match typ with
 	| PrimitiveType value -> string_of_type value
 	| UserDefinedType value -> value
 	| NullType -> "Null"
+
+let rec string_of_types
+	(types: system_type list): string =
+		match types with
+		| [] -> ""
+		| [last] -> (string_of_type last)
+		| h::t -> (string_of_type h) ^ " ; " ^ string_of_types t

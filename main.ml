@@ -4,13 +4,13 @@ open RelatedType
 open ClassFields
 open TypeExpression
 open Relation
-
+open Type
 
 let prog = (Program([A.cls; B.cls; M.cls]))
 
 let _ =
 	let expression = 
-		LocalVar(UserDefinedType("A"), VarWithName("a"), Compose(Var(KFloat(2.0)), Var(VarWithField("a", "f1"))))
+		LocalVar(UserDefinedType("A"), VarWithName("a"), New("X", []))
 	in print_endline (Type.string_of_type (
 		TypeExpression.type_of expression prog))
 	
@@ -22,6 +22,7 @@ let () =
 				(List.map (fun it -> (string_of_relation it)) (extend relations)))
 
 
+let _= print_endline (string_of_types (Program.user_types_in prog))
 
 let _ = print_endline (
 			string_of_bool (

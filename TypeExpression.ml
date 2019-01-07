@@ -34,6 +34,7 @@ let fields_to_records
 	List.map (fun it -> (field_to_record it)) fields
 
 exception ErrorInvalidTypeEq
+exception ErrorInvalidNewType
 
 let rec type_of_expression
 		(program: program)
@@ -52,8 +53,12 @@ let rec type_of_expression
 			then PrimitiveType(CoreUnit) else (raise ErrorInvalidTypeEq)
 	| Compose (lexpr, rexpr) -> (type_of_expression program environment rexpr)
 	| Operation op -> type_of_operation program environment op
+	| New (typ, args) -> 
+		let result = UserDefinedType(typ) in
+		if (List.exists (fun it -> (string_of_type it) = typ) (Program.user_types_in program)) 
+		then result else (raise ErrorInvalidNewType) 
 	| _ -> PrimitiveType(CoreInt)
-
+	
 and type_of_operation
 		(program: program)
 		(environment: environment)

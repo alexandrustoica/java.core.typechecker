@@ -2,7 +2,6 @@ open Type
 open Program
 open Relation
 
-
 (** Returns a list of related type with given type within a program. *)
 val related_with: system_type -> program -> system_type list
 
