@@ -7,3 +7,6 @@ val related_with: system_type -> program -> system_type list
 
 (** Checks if two types are related based on inheritance within a program. *)
 val is_related: system_type -> system_type -> program -> bool
+
+(** Checks if exists a relationship between two types in program. *)
+val is_connected: system_type -> system_type -> program -> bool

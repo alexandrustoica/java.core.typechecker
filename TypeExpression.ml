@@ -33,8 +33,15 @@ let fields_to_records
 (system_type * string) list =
 	List.map (fun it -> (field_to_record it)) fields
 
+
+
 exception ErrorInvalidTypeEq
 exception ErrorInvalidNewType
+exception ImposibleToCastType
+
+let is_user_defined (typ: string) (_in: program): bool =
+		List.exists (fun it -> (string_of_type it) = typ) (Program.user_types_in _in)
+
 
 let rec type_of_expression
 		(program: program)
@@ -53,10 +60,17 @@ let rec type_of_expression
 			then PrimitiveType(CoreUnit) else (raise ErrorInvalidTypeEq)
 	| Compose (lexpr, rexpr) -> (type_of_expression program environment rexpr)
 	| Operation op -> type_of_operation program environment op
+	| If (var, l, r) -> type_of_expression program environment l 
 	| New (typ, args) -> 
 		let result = UserDefinedType(typ) in
-		if (List.exists (fun it -> (string_of_type it) = typ) (Program.user_types_in program)) 
+		if (is_user_defined typ program) 
 		then result else (raise ErrorInvalidNewType) 
+	| Cast (typ_as_string, var) ->
+		if ((is_user_defined typ_as_string program) && 
+		(RelatedType.is_connected (UserDefinedType(typ_as_string)) 
+		(type_of_variable program environment var) program)) then
+			UserDefinedType(typ_as_string) else (raise ImposibleToCastType)
+		
 	| _ -> PrimitiveType(CoreInt)
 	
 and type_of_operation
@@ -108,6 +122,7 @@ and type_of_bool_operation
 	| Not expr -> (type_of expr) == (type_result)
 
 
+(** TODO Check if user defined type. *)
 and type_of_compare_operation
 	(program: program)
 	(environment: environment)

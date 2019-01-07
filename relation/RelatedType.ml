@@ -16,3 +16,10 @@ let is_related
 	let relation = Relation(base, super)
 	in let relations = (extend (relations_in _in))
 	in (List.exists (fun it -> Relation.compare it relation) relations) || (Type.compare base super)
+
+
+let is_connected
+	(left: system_type)
+	(right: system_type)
+	(_in: program): bool =
+		(is_related left right _in) || (is_related right left _in)
