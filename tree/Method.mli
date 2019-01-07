@@ -1,4 +1,4 @@
-open SystemType
+open Type
 open Expression
 open Parameter
 

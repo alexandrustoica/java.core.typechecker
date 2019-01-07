@@ -1,7 +1,7 @@
 open Expression
-open SystemType
+open Type
 open Program
-open FieldList
+open ClassFields
 open Field
 open Environment
 
@@ -121,8 +121,8 @@ and validate_types_eq
 		(result: system_type)
 		(l: system_type)
 		(r: system_type): system_type =
-	if ((SystemType.compare l compareWith) &&
-		(SystemType.compare r compareWith)) then result
+	if ((Type.compare l compareWith) &&
+		(Type.compare r compareWith)) then result
 	else (raise ErrorInvalidTypeEq)
 
 let type_of (expression: expression) (_in: program): system_type =

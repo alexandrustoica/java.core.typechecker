@@ -1,4 +1,4 @@
-open SystemType
+open Type
 open Expression
 
 type record = Record of (system_type * string)

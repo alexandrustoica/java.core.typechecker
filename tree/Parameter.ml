@@ -1,4 +1,4 @@
-open SystemType
+open Type
 
 type parameter = Parameter of system_type * string
 

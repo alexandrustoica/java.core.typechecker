@@ -1,7 +1,7 @@
 open Expression
 open Program
 open SubType
-open FieldList
+open ClassFields
 open Field
 open TypeExpression
 open Parameter
@@ -66,7 +66,7 @@ let prog = (Program([first_class; second_class; third_class]))
 let _ =
 	let expression = 
 		LocalVar(UserDefinedType("A"), VarWithName("a"), Compose(Var(KFloat(2.0)), Var(VarWithField("a", "f1"))))
-	in print_endline (SystemType.string_of_type (
+	in print_endline (Type.string_of_type (
 		TypeExpression.type_of expression prog))
 	
 

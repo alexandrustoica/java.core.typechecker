@@ -1,4 +1,4 @@
-open SystemType
+open Type
 
 type variable =
 	| KNull

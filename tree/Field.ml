@@ -1,4 +1,4 @@
-open SystemType
+open Type
 
 type field_declaration =
 	| FieldDeclaration of system_type * string

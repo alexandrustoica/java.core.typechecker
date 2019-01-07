@@ -1,5 +1,5 @@
 open Program
-open SystemType
+open Type
 open Expression
 open Class
 
@@ -8,8 +8,8 @@ type relation = Relation of system_type * system_type
 let compare (left: relation) (right: relation) : bool =
 	match (left, right) with
 	| ((Relation (ll, rl)), (Relation (lr, rr))) ->
-			(SystemType.compare ll lr) &&
-			(SystemType.compare rl rr)
+			(Type.compare ll lr) &&
+			(Type.compare rl rr)
 
 let string_of_relation (relation: relation): string =
 	match relation with
@@ -33,7 +33,7 @@ let super_types_for
 	List.map (fun it -> match it with Relation (_, r) -> r)
 		(List.filter (fun it ->
 							match it with
-							| Relation (l, _) -> SystemType.compare l typ)
+							| Relation (l, _) -> Type.compare l typ)
 				in_relations)
 
 let rec extend_relations
@@ -61,4 +61,4 @@ let is_subtype
 	let relation = Relation(base, super)
 	in let relations = (relations_in in_prog)
 	in (List.exists (fun it -> compare it relation) (extend relations)) ||
-	(SystemType.compare base super)
+	(Type.compare base super)

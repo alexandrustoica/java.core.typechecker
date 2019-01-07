@@ -2,3 +2,5 @@
 /usr/local/lib/ocaml
 test
 tests
+tree
+_build/tree

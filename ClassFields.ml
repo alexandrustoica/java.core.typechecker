@@ -1,25 +1,16 @@
 open Program
-open SystemType
+open Type
 open SubType
 open Field
 open Class 
 
-let fields_of (cls: class_declaration) : field_declaration list =
-	match cls with
-	| ClassDeclaration (_, fields, _) -> fields
-	| InheritanceDeclaration(_, _, fields, _) -> fields
-
-let class_name_of (cls: class_declaration) : string =
-	match cls with
-	| ClassDeclaration (name, _, _) -> name
-	| InheritanceDeclaration (name, _, _, _) -> name
 
 let fields_for (typ: string) (in_prog: program) : field_declaration list =
 	match in_prog with
 	| Program classes ->
 			List.flatten (
-					List.map (fun it -> (fields_of it)) (
-							List.find_all (fun cls -> (class_name_of cls) = typ) classes))
+					List.map (fun it -> (fields_of_class it)) (
+							List.find_all (fun cls -> (name_of_class cls) = typ) classes))
 
 let fields_for (typ: system_type) (in_prog: program) : field_declaration list =
 	match typ with
