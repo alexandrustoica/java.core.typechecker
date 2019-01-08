@@ -1,8 +1,7 @@
 
 type environment = Environment of Record.record list
 
-let records_of = function
-	| Environment values -> values
+let records_of = function Environment values -> values
 
 let string_of = function
 	| Environment values -> values

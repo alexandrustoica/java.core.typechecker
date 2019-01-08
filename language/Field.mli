@@ -1,6 +1,5 @@
 
-type field_declaration =
-	| FieldDeclaration of Type.system_type * string
+type field_declaration = FieldDeclaration of Type.system_type * string
 	
 val type_of: field_declaration -> Type.system_type
 val name_of: field_declaration -> string

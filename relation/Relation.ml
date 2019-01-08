@@ -1,11 +1,8 @@
 
 type relation = Relation of Type.system_type * Type.system_type
 
-let head = function
-	| Relation (it, _) -> it
-
-let tail = function
-	| Relation (_, it) -> it
+let head = function Relation (it, _) -> it
+let tail = function Relation (_, it) -> it
 
 let compare left right =
 	match (left, right) with
