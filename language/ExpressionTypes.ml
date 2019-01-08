@@ -1,26 +1,17 @@
-open Type
-
-type variable =
-	| KNull
-	| KInt of int
-	| KFloat of float
-	| KBool of bool
-	| VarWithName of string
-	| VarWithField of string * string
 
 type expression =
 	| Void
-	| Var of variable
-	| Assign of variable * expression
-	| LocalVar of system_type * variable * expression
+	| Var of Variable.variable
+	| Assign of Variable.variable * expression
+	| LocalVar of Type.system_type * Variable.variable * expression
 	| Compose of expression * expression
-	| If of variable * expression * expression
+	| If of Variable.variable * expression * expression
 	| Operation of operation
-	| New of string * variable list
-	| Call of variable * string * variable list
-	| While of variable * expression
-	| Cast of string * variable
-	| InstanceOf of variable * string
+	| New of string * Variable.variable list
+	| Call of Variable.variable * string * Variable.variable list
+	| While of Variable.variable * expression
+	| Cast of string * Variable.variable
+	| InstanceOf of Variable.variable * string
 
 and operation =
 	| IntOperation of int_operation
@@ -52,7 +43,4 @@ and compare_operation =
 	| GE of expression * expression
 	| EQ of expression * expression
 	| NE of expression * expression
-
-val string_of_expression: expression -> string
-val string_of_operation: operation -> string
-val string_of_variable: variable -> string
+	

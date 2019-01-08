@@ -39,11 +39,11 @@ let string_of_class
 	match cls with
 	| InheritanceDeclaration (name, super, fields, methods) ->
 			"class " ^ name ^ " extends " ^ super ^ "{\n" ^
-			List.fold_left (fun acc it -> (string_of_field it) ^ "\n" ^ acc) "" fields ^
-			List.fold_left (fun acc it -> acc ^ "\n" ^ (string_of_method it)) "" methods ^
+			List.fold_left (fun acc it -> (Field.string_of it) ^ "\n" ^ acc) "" fields ^
+			List.fold_left (fun acc it -> acc ^ "\n" ^ (Method.string_of it)) "" methods ^
 			"\n}"
 	| ClassDeclaration (name, fields, methods) ->
 			"class " ^ name ^ "{\n" ^
-			List.fold_left (fun acc it -> (string_of_field it) ^ "\n" ^ acc) "" fields ^
-			List.fold_left (fun acc it -> acc ^ "\n" ^ (string_of_method it)) "" methods ^
+			List.fold_left (fun acc it -> (Field.string_of it) ^ "\n" ^ acc) "" fields ^
+			List.fold_left (fun acc it -> acc ^ "\n" ^ (Method.string_of it)) "" methods ^
 			"\n}"

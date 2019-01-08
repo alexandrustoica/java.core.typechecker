@@ -15,11 +15,10 @@ exception UnrelatedTypeException
 exception UnableToCastVariableToBool
 exception UnableToCompareUserDefinedTypes
 
+
 exception UnrelatedTypesInAssignment of string
 exception InvalidReturnTypeOfIfExpression of string
 exception InvalidConditionalTypeOfIfExpression
-
-
 
 
 let is_user_defined (typ: string) (_in: program): bool =
@@ -28,7 +27,7 @@ let is_user_defined (typ: string) (_in: program): bool =
 let rec type_of
 		(expression: expression)
 		(context: context): system_type =
-	let _ = (print_endline (Environment.string_of (env_of context)))
+	let _ = (print_endline (Environment.string_of (environment_of context)))
 	and type_of_variable var = TypeVariable.type_of var context in
 	match expression with
 	| Void -> PrimitiveType(CoreUnit)
@@ -79,7 +78,7 @@ let rec type_of
 	
 	| While (var, expr) ->
 			if (Type.compare (TypeVariable.type_of var context) (PrimitiveType(CoreBool))) then
-				let result = (type_of expr context) in (PrimitiveType(CoreBool)) else
+				let _ = (type_of expr context) in (PrimitiveType(CoreBool)) else
 				(raise UnableToCastVariableToBool)
 	
 	| _ -> PrimitiveType(CoreInt)

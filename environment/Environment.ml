@@ -1,7 +1,4 @@
 
-open Type
-open Record
-
 type environment = Environment of Record.record list
 
 let records_of = function
@@ -12,12 +9,11 @@ let string_of = function
 			|> List.map Record.string_of
 			|> List.fold_left (fun acc it -> acc ^ " " ^ it) ""
 
-let find_in (env: environment) (name: string): Type.system_type =
-	match env with
-	| Environment values ->
-			values |> List.find (fun it -> (Record.name_of it) = name) |> type_of
+let find_in environment name =
+	let equal_by_name = fun it -> (Record.name_of it) = name in
+	match environment with
+	| Environment values -> values |> List.find equal_by_name |> Record.type_of
 
-let insert_in (env: environment) (record: record): environment =
-	match env with
+let insert_in environment record =
+	match environment with
 	| Environment values -> Environment(record :: values)
-

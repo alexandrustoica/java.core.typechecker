@@ -1,5 +1,7 @@
 true: package(oUnit), traverse
-"tree": include
+"language": include
 "classes": include
 "environment": include
 "relation": include
+"test": include
+"checker": include

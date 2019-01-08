@@ -1,12 +1,14 @@
 .
 /usr/local/lib/ocaml
 test
-tests
-tree
 classes
 environment
 relation
+checker
+_build/checker
 _build/classes
 _build/environment
 _build/relation
 _build/tree
+language
+_build/language

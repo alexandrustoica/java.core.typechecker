@@ -1,24 +1,17 @@
-open Type
-open Field
-open Expression
 
-type record = Record of system_type * string
+type record = Record of Type.system_type * string
 
-let string_of (record: record): string =
-	match record with
-	| Record (typ, name) -> (string_of_type typ) ^ " -- " ^ name
+let string_of = function
+	| Record (typ, name) -> (Type.string_of_type typ) ^ " -- " ^ name
 
-let type_of (record: record): system_type =
-	match record with
+let type_of = function
 	| Record (typ, _) -> typ
 
-let name_of (record: record): string =
-	match record with
+let name_of = function
 	| Record (_, name) -> name
 
-let record_of
-		(typ: system_type)
-		(variable: variable): record =
+let record_of typ variable =
 	match variable with
-	| VarWithName name -> Record(typ, name)
-	| _ -> Record(typ, "CheckThisPoint") (*REFACTOR*)
+	| Variable.VarWithName name -> Record(typ, name)
+	| Variable.VarWithField (name, field) -> Record(typ, name)
+	| it -> Record(typ, (Variable.string_of it))

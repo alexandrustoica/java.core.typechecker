@@ -1,25 +1,13 @@
-open Program
-open Relation
-open Type
 
+let related_with typ in_program =
+	let in_relations = Relation.extend (Relation.relations_in in_program) in
+	Relation.tails_for typ in_relations
 
-let related_with
-		(typ: system_type)
-		(in_prog: program): system_type list =
-	(tails_for typ (extend (relations_in in_prog)))
+let is_related left right in_program = 
+	let relation = Relation.Relation(left, right) in
+	let is_equal = fun it -> Relation.compare it relation
+	and relations = (Relation.extend (Relation.relations_in in_program))
+	in (List.exists is_equal relations) || (Type.compare left right)
 
-
-let is_related
-		(base: system_type)
-		(super: system_type)
-		(_in: program): bool =
-	let relation = Relation(base, super)
-	in let relations = (extend (relations_in _in))
-	in (List.exists (fun it -> Relation.compare it relation) relations) || (Type.compare base super)
-
-
-let is_connected
-	(left: system_type)
-	(right: system_type)
-	(_in: program): bool =
-		(is_related left right _in) || (is_related right left _in)
+let is_connected left right in_program =
+	(is_related left right in_program) || (is_related right left in_program)

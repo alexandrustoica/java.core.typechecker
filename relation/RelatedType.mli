@@ -1,12 +1,10 @@
-open Type
-open Program
-open Relation
 
 (** Returns a list of related type with given type within a program. *)
-val related_with: system_type -> program -> system_type list
+val related_with: Type.system_type -> Program.program -> Type.system_type list
 
 (** Checks if two types are related based on inheritance within a program. *)
-val is_related: system_type -> system_type -> program -> bool
+val is_related: Type.system_type -> Type.system_type -> Program.program -> bool
 
 (** Checks if exists a relationship between two types in program. *)
-val is_connected: system_type -> system_type -> program -> bool
+val is_connected: Type.system_type -> 
+	Type.system_type -> Program.program -> bool

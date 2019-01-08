@@ -1,54 +1,45 @@
-open Type
-open Class
-open Program
 
-type relation = Relation of system_type * system_type
+type relation = Relation of Type.system_type * Type.system_type
 
-let head (relation: relation) : system_type =
-	match relation with
+let head = function
 	| Relation (it, _) -> it
 
-let tail (relation: relation) : system_type =
-	match relation with
+let tail = function
 	| Relation (_, it) -> it
 
-let compare (left: relation) (right: relation) : bool =
+let compare left right =
 	match (left, right) with
-	| (Relation (ll, rl), Relation (lr, rr)) ->
+	| Relation (ll, rl), Relation (lr, rr) ->
 			(Type.compare ll lr) && (Type.compare rl rr)
 
-let string_of_relation (relation: relation): string =
-	match relation with
+let string_of_relation = function
 	| Relation (base, super) ->
-			(string_of_type base) ^ " <: " ^ (string_of_type super)
+			(Type.string_of_type base) ^ " <: " ^ (Type.string_of_type super)
 
-let relation_in
-		(cls: class_declaration) : relation = Relation(
-		UserDefinedType(name_of_class cls),
-		UserDefinedType(super_of_class cls))
+let relation_in cls =
+	Relation(
+		Type.UserDefinedType(Class.name_of_class cls),
+		Type.UserDefinedType(Class.super_of_class cls))
 
-let relations_in (prog: program) : relation list =	match prog with
-	| Program classes -> List.map (fun it -> (relation_in it)) classes
+let relations_in = function
+	| Program.Program classes -> List.map relation_in classes
 
-let tails_for (hd: system_type) (_in: relation list): system_type list =
-	List.map (fun relation -> (tail relation))
-		(List.filter (fun it -> Type.compare (head it) hd) _in)
+let tails_for hd within =
+	let equal_heads it = Type.compare (head it) hd in
+	within |> List.filter equal_heads |> List.map tail
 
-let related_with
-		(relation: relation)
-		(_in: relation list) : relation list =
+let related_with relation within =
+	let create_relation x = fun it -> Relation(x, it) in
 	match relation with
-	| Relation (left, right) ->
-			List.map (fun it -> Relation(left, it)) (tails_for right _in)
+	| Relation (left, right) -> within
+			|> tails_for right
+			|> List.map (create_relation left)
 
-let rec extend_relations
-		(storage: relation list)
-		(relations: relation list)
-		(acc: relation list) : relation list =
+let rec extend_relations relations acc all =
 	match relations with
 	| [] -> acc
-	| h:: t -> let new_relations = (related_with h storage)
-			in extend_relations storage t (acc @ [h] @ new_relations)
+	| h :: t ->
+			let new_relations = related_with h all in
+			extend_relations t (acc @ [h] @ new_relations) all
 
-let extend (relations: relation list) : relation list =
-	extend_relations relations relations []
+let extend relations = extend_relations relations [] relations
