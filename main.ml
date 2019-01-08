@@ -5,15 +5,17 @@ open ClassFields
 open TypeExpression
 open Relation
 open Type
+open Environment 
+open Context
 
 let prog = (Program([A.cls; B.cls; M.cls]))
 
 let _ =
 	let expression = 
-		LocalVar(UserDefinedType("A"), VarWithName("a"),
-		Operation(CompareOperation(LT(Var(VarWithName("a")), Var(VarWithName("a"))))))
+		LocalVar(UserDefinedType("A"), VarWithName("a"), Var(KInt(3)))
+	in let context = Context(prog, Environment([]))
 	in print_endline (Type.string_of_type (
-		TypeExpression.type_of expression prog))
+		TypeExpression.type_of expression context))
 	
 
 let () =

@@ -10,3 +10,4 @@ environment
 _build/environment
 relation
 _build/relation
+_build/tests

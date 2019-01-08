@@ -14,3 +14,7 @@ let string_of_field
 	match field with
 	| FieldDeclaration (typ, name) -> 
 		(string_of_type typ) ^ " " ^ name ^ ";"
+
+
+let find_by (name: string) (_in: field_declaration list): field_declaration =
+	List.find (fun it -> (name_of_field it) = name) _in
