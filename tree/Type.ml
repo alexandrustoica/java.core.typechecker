@@ -46,3 +46,14 @@ let rec string_of_types
 		| [] -> ""
 		| [last] -> (string_of_type last)
 		| h::t -> (string_of_type h) ^ " ; " ^ string_of_types t
+
+let is_user_defined (typ: system_type): bool =
+	match typ with
+	| UserDefinedType _ -> true
+	| _ -> false
+
+let is_user_defined
+	(types: system_type list): bool = types 
+		|> List.map (fun it -> is_user_defined it) 
+		|> List.fold_left (fun acc it -> acc && it) true
+		

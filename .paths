@@ -3,11 +3,10 @@
 test
 tests
 tree
-_build/tree
 classes
-_build/classes
 environment
-_build/environment
 relation
+_build/classes
+_build/environment
 _build/relation
-_build/tests
+_build/tree

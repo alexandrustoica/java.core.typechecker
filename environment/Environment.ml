@@ -2,22 +2,22 @@
 open Type
 open Record
 
-type environment = Environment of record list
+type environment = Environment of Record.record list
 
-
-let records_of (env: environment): record list =
-	match env with
+let records_of = function
 	| Environment values -> values
 
-let string_of (env: environment): string =
-	List.fold_left (fun acc it -> acc ^ " " ^ it) "" 
-	(List.map (fun it -> Record.string_of it) (records_of env))
+let string_of = function
+	| Environment values -> values
+			|> List.map Record.string_of
+			|> List.fold_left (fun acc it -> acc ^ " " ^ it) ""
 
-let find_in (env: environment) (name: string): system_type =
+let find_in (env: environment) (name: string): Type.system_type =
 	match env with
-	| Environment values -> type_of (List.find (fun it -> (name_of it) = name) values)
+	| Environment values ->
+			values |> List.find (fun it -> (Record.name_of it) = name) |> type_of
 
 let insert_in (env: environment) (record: record): environment =
 	match env with
-	| Environment values -> Environment([record] @ values)
+	| Environment values -> Environment(record :: values)
 

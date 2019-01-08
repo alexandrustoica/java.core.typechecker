@@ -24,6 +24,10 @@ let tests = "Type of expression tests" >::: [
 	"Compose Test" >:: (fun _ -> 
 		let expr = Compose(Var(KInt(4)), Var(KFloat(3.0)))
 		in assert_equal (type_of expr context) (PrimitiveType(CoreFloat)));
+		
+	"If Test" >:: (fun _ -> 
+		let expr = If(KBool(true), Var(KInt(3)), Var(KInt(3)))
+		in assert_equal (type_of expr context) (PrimitiveType(CoreInt)));
 ]
 
 let _ = run_test_tt_main tests
