@@ -1,4 +1,4 @@
-open Expression
+ open Expression
 open Type
 open Program
 open ClassFields
@@ -21,8 +21,28 @@ exception InvalidReturnTypeOfIfExpression of string
 exception InvalidConditionalTypeOfIfExpression
 
 
+exception UnableToFindUsedDefinedType
+exception UnableToFindMethodDeclarationWithinClass
+exception UnableToMatchParameterTypesWithArgumentTypesInMethodCall
+
 let is_user_defined (typ: string) (_in: program): bool =
 	List.exists (fun it -> (string_of_type it) = typ) (Program.user_types_in _in)
+
+let check_method_call var name args context =
+	let type_of_variable = TypeVariable.type_of var context
+	and in_program = Context.program_of context in
+	match (Program.find_class type_of_variable in_program) with
+	| None -> raise UnableToFindUsedDefinedType
+	| Some cls -> 
+		match (Class.find_method_by name cls) with
+		| None -> raise UnableToFindMethodDeclarationWithinClass 
+		| Some meth ->
+			let args_types = TypeVariable.types_of args context 
+			and params_types = (Method.parameters_of meth) 
+			|> List.map Parameter.type_of in
+			match (RelatedType.are_connected args_types params_types in_program) with
+			| false -> raise UnableToMatchParameterTypesWithArgumentTypesInMethodCall
+			| true -> Method.type_of meth
 
 let rec type_of
 		(expression: expression)
@@ -57,6 +77,8 @@ let rec type_of
 			if (Type.compare then_type else_type) then then_type else
 				(raise (InvalidReturnTypeOfIfExpression
 							((string_of_type then_type) ^ " =/= " ^ (string_of_type else_type))))
+	
+	| Call (var, name, args) -> check_method_call var name args context
 	
 	| New (typ, args) ->
 	(* Check Fields' || Args Types *)

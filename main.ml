@@ -4,7 +4,8 @@ open Variable
 let program = (Program.Program([A.cls; B.cls; M.cls]))
 
 let _ =	
-	let expression = LocalVar(UserDefinedType("A"), VarWithName("a"), Var(KInt(3))) 
+	let expression = LocalVar(UserDefinedType("A"), VarWithName("a"),
+	Call(VarWithName("a"), "m1", [KInt(4); KInt(4)])) 
 	and context = Context.Context(program, Environment.Environment([])) in
 	context |> TypeExpression.type_of expression
 	|> Type.string_of_type |> print_endline

@@ -11,3 +11,12 @@ let is_related left right in_program =
 
 let is_connected left right in_program =
 	(is_related left right in_program) || (is_related right left in_program)
+
+
+let rec are_connected xs ys in_program =
+	match (xs, ys) with
+	| ([], []) -> true
+	| (hx :: tx, hy :: ty) -> 
+		 (is_connected hx hy in_program) &&
+		 (are_connected tx ty in_program)
+	| _, _ -> false

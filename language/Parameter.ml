@@ -12,3 +12,7 @@ let string_of_parameters = function
 		let head = (string_of_parameter h) in
 		let result = t |> List.fold_left compose head in
 		"(" ^ result ^ ")"
+		
+let type_of = function Parameter (typ, _) -> typ
+
+let name_of = function Parameter (_, name) -> name

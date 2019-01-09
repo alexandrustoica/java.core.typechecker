@@ -8,3 +8,6 @@ val is_related: Type.system_type -> Type.system_type -> Program.program -> bool
 (** Checks if exists a relationship between two types in program. *)
 val is_connected: Type.system_type -> 
 	Type.system_type -> Program.program -> bool
+
+val are_connected: Type.system_type list ->
+	Type.system_type list -> Program.program -> bool

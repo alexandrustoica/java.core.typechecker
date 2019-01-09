@@ -17,3 +17,7 @@ let type_of variable context =
 		let class_name = string_of_type type_for_name in
 		let fields = fields_of class_name in
 		fields |> Field.find_by name |> Field.type_of
+
+
+let types_of vars context =
+	vars |> List.map (fun it -> type_of it context)
