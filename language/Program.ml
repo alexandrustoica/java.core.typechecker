@@ -24,3 +24,15 @@ let find_class typ within =
 	and classes = classes_of within in
 	classes |> List.find_opt eq
 	
+let duplications = function
+	| Program classes -> 
+		let class_name it = Class.name_of_class it in
+		let eq x = fun it -> (class_name it) = (class_name x) in
+		let rec duplicated_classes classes acc =
+			match classes with
+			| [] -> acc
+			| h :: t -> 
+				match (List.find_opt (eq h) t) with
+				| None -> duplicated_classes t acc
+				| Some cls -> duplicated_classes t (cls::acc) in
+		duplicated_classes classes []

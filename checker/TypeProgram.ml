@@ -3,6 +3,7 @@ exception DuplicatedDefinitionOfMethodInClass
 exception DuplicatedElementFoundInClass
 exception NoEntryClassFoundInProgram
 exception NoEntryPointFunctionFoundInProgram
+exception DuplicatedClassDeclarationDetected
 
 let detect_duplicates = function
 	| Program.Program classes ->
@@ -25,10 +26,16 @@ let detect_entry_point in_program =
 			| None -> raise NoEntryPointFunctionFoundInProgram
 			| Some meth -> ()
 
+let detect_duplicated_classes in_program =
+	match (Program.duplications in_program) with
+	| [] -> () 
+	| _ -> raise DuplicatedClassDeclarationDetected
+
 let type_of program =
 	let context = Context.Context(program, Environment.Environment([]))
 	and classes = (Program.classes_of program) in
 	let type_of_class = fun it -> TypeClass.type_of it context in
 	let _ = classes |> List.map type_of_class in
 	let _ = detect_duplicates program in
-	let _ = detect_entry_point program in ()
+	let _ = detect_entry_point program in
+	let _ = detect_duplicated_classes program in ()
