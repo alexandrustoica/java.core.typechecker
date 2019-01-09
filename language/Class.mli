@@ -15,3 +15,6 @@ val super_of_class: class_declaration -> string
 
 val find_method_by: string -> class_declaration ->
 	 Method.method_declaration option
+	
+val duplications: class_declaration -> 
+	(Field.field_declaration list * Method.method_declaration list)

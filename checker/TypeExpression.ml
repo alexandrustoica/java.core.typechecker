@@ -47,8 +47,9 @@ let check_method_call var name args context =
 let rec type_of
 		(expression: expression)
 		(context: context): system_type =
-	let _ = (print_endline (Environment.string_of (environment_of context))) 
-	and _ = (Expression.string_of_expression expression) |> print_endline  
+	let _ = (print_endline ("Env: " ^ (Environment.string_of (environment_of context)))) 
+	and _ = (Expression.string_of_expression expression) 
+		|> (fun it -> print_endline ("Expr:" ^ it))   
 	and type_of_variable var = TypeVariable.type_of var context in
 	match expression with
 	| Void -> PrimitiveType(CoreUnit)

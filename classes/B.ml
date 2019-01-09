@@ -20,7 +20,7 @@ let mAssign = Assign(VarWithName("m"), Operation(CompareOperation(GT(
 let first = Assign(VarWithName("n"),
 		Operation(IntOperation(IntMinus(
 					Call(VarWithName("x"), "m1", [KInt(1); KInt(2)]),
-					Call(VarWithName("y"), "m2", [KInt(2); KInt(1)])))))
+					Call(VarWithName("y"), "m1", [KInt(2); KInt(1)])))))
 let localNestedBlock = LocalVar(PrimitiveType(CoreBool), VarWithName("m"), Compose(mAssign, ifExpr))
 let expression = Compose(first, Compose(localNestedBlock, last))
 let block = LocalVar(PrimitiveType(CoreInt), VarWithName("n"), expression)

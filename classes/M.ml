@@ -10,7 +10,7 @@ let assignmentB = Assign(VarWithName("o1"), New("B", [KInt(0); KNull]))
 let assignmentA = Assign(VarWithName("o2"), New("A", [KInt(2)]))
 let assignmentC = Assign(VarWithName("o3"), New("A", [KInt(3)]))
 
-let call = Call(VarWithName("o1"), "m2", [VarWithName("o2"); VarWithName("m3")])
+let call = Call(VarWithName("o1"), "m2", [VarWithName("o2"); VarWithName("o3")])
 
 let last = Assign(VarWithName("o2"), call)
 let third = LocalVar(UserDefinedType("A"), VarWithName("o3"), Compose(assignmentC, last))
