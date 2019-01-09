@@ -5,10 +5,10 @@ let program = (Program.Program([A.cls; B.cls; M.cls]))
 
 let _ =	
 	let expression = LocalVar(UserDefinedType("A"), VarWithName("a"),
-	Call(VarWithName("a"), "m1", [KInt(4); KInt(4)])) 
+		Call(VarWithName("a"), "m1", [KInt(4); KInt(4)])) in
+	let meth = Method.MethodDeclaration(PrimitiveType(CoreInt), "m2", [], expression)
 	and context = Context.Context(program, Environment.Environment([])) in
-	context |> TypeExpression.type_of expression
-	|> Type.string_of_type |> print_endline
+	context |> TypeMethod.type_of meth |> Type.string_of_type |> print_endline
 
 let _ = let relations = Relation.extend (Relation.relations_in program) in
 	relations |> List.map Relation.string_of_relation
