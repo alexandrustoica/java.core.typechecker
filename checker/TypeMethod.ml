@@ -12,3 +12,4 @@ let type_of meth context =
 		| false -> raise IncompatibleReturnTypeFromMethodExpression
 		| true -> typ
 		
+		

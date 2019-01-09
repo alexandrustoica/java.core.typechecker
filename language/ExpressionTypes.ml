@@ -43,4 +43,3 @@ and compare_operation =
 	| GE of expression * expression
 	| EQ of expression * expression
 	| NE of expression * expression
-	

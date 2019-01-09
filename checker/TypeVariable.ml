@@ -14,9 +14,9 @@ let type_of variable context =
 	| VarWithName name -> search name
 	| VarWithField (name, field) ->	
 		let type_for_name = search name in
-		let class_name = string_of_type type_for_name in
+		let class_name = Type.string_of_type type_for_name in
 		let fields = fields_of class_name in
-		fields |> Field.find_by name |> Field.type_of
+		fields |> Field.find_by field |> Field.type_of
 
 
 let types_of vars context =

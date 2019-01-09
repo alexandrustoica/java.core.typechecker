@@ -27,7 +27,7 @@ exception UnableToMatchParameterTypesWithArgumentTypesInMethodCall
 
 let is_user_defined (typ: string) (_in: program): bool =
 	List.exists (fun it -> (string_of_type it) = typ) (Program.user_types_in _in)
-
+	
 let check_method_call var name args context =
 	let type_of_variable = TypeVariable.type_of var context
 	and in_program = Context.program_of context in
@@ -47,7 +47,8 @@ let check_method_call var name args context =
 let rec type_of
 		(expression: expression)
 		(context: context): system_type =
-	let _ = (print_endline (Environment.string_of (environment_of context)))
+	let _ = (print_endline (Environment.string_of (environment_of context))) 
+	and _ = (Expression.string_of_expression expression) |> print_endline  
 	and type_of_variable var = TypeVariable.type_of var context in
 	match expression with
 	| Void -> PrimitiveType(CoreUnit)
