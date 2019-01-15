@@ -16,6 +16,8 @@ let compare left right =
 
 let compare left right =
 	match (left, right) with
+	| (NullType, UserDefinedType _) -> true
+	| (UserDefinedType _, NullType) -> true
 	| (UserDefinedType l, UserDefinedType r) -> l = r
 	| (PrimitiveType l, PrimitiveType r) -> compare l r
 	| (NullType, NullType) -> true
@@ -35,7 +37,7 @@ let string_of_type = function
 let rec string_of_types = function
 	| [] -> ""
 	| [last] -> (string_of_type last)
-	| h:: t -> (string_of_type h) ^ " ; " ^ string_of_types t
+	| h::t -> (string_of_type h) ^ " ; " ^ string_of_types t
 
 let is_user_defined = function
 	| UserDefinedType _ -> true

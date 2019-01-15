@@ -12,3 +12,5 @@ _build/relation
 _build/tree
 language
 _build/language
+checker
+classes

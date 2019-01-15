@@ -12,4 +12,5 @@ val tails_for: Type.system_type ->
 val relation_in: Class.class_declaration -> relation
 val relations_in: Program.program -> relation list
 
+val is_identity: relation -> bool
 val extend: relation list -> relation list

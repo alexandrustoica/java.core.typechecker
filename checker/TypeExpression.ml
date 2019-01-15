@@ -1,4 +1,4 @@
- open Expression
+open Expression
 open Type
 open Program
 open ClassFields
@@ -15,11 +15,9 @@ exception UnrelatedTypeException
 exception UnableToCastVariableToBool
 exception UnableToCompareUserDefinedTypes
 
-
 exception UnrelatedTypesInAssignment of string
 exception InvalidReturnTypeOfIfExpression of string
 exception InvalidConditionalTypeOfIfExpression
-
 
 exception UnableToFindUsedDefinedType
 exception UnableToFindMethodDeclarationWithinClass
@@ -27,29 +25,47 @@ exception UnableToMatchParameterTypesWithArgumentTypesInMethodCall
 
 let is_user_defined (typ: string) (_in: program): bool =
 	List.exists (fun it -> (string_of_type it) = typ) (Program.user_types_in _in)
-	
+
 let check_method_call var name args context =
 	let type_of_variable = TypeVariable.type_of var context
 	and in_program = Context.program_of context in
 	match (Program.find_class type_of_variable in_program) with
 	| None -> raise UnableToFindUsedDefinedType
-	| Some cls -> 
-		match (Class.find_method_by name cls) with
-		| None -> raise UnableToFindMethodDeclarationWithinClass 
-		| Some meth ->
-			let args_types = TypeVariable.types_of args context 
-			and params_types = (Method.parameters_of meth) 
-			|> List.map Parameter.type_of in
-			match (RelatedType.are_connected args_types params_types in_program) with
-			| false -> raise UnableToMatchParameterTypesWithArgumentTypesInMethodCall
-			| true -> Method.type_of meth
+	| Some cls ->
+			match (Class.find_method_by name cls) with
+			| None -> raise UnableToFindMethodDeclarationWithinClass
+			| Some meth ->
+					let args_types = TypeVariable.types_of args context
+					and params_types = (Method.parameters_of meth)
+						|> List.map Parameter.type_of in
+					match (RelatedType.are_connected args_types params_types in_program) with
+					| false -> raise UnableToMatchParameterTypesWithArgumentTypesInMethodCall
+					| true -> Method.type_of meth
+
+let check_new_object typ args context =
+	let program = Context.program_of context in
+	let args_types = TypeVariable.types_of args context |> List.rev
+	and cls = Program.find_class (Type.UserDefinedType typ) program in
+	match cls with
+	| None -> raise ErrorInvalidNewType
+	| Some class_declaration ->
+			let fields_types = (Program.declared_fields_of class_declaration program)
+			 |> List.map Field.type_of in
+			let results = RelatedType.are_connected args_types fields_types program in
+			match results with
+			| false -> raise ErrorInvalidNewType
+			| true ->
+					let result = UserDefinedType(typ) in
+					match (is_user_defined typ (program_of context)) with
+					| false -> raise ErrorInvalidNewType
+					| _ -> result
 
 let rec type_of
 		(expression: expression)
 		(context: context): system_type =
-	let _ = (print_endline ("Env: " ^ (Environment.string_of (environment_of context)))) 
-	and _ = (Expression.string_of_expression expression) 
-		|> (fun it -> print_endline ("Expr:" ^ it))   
+	let _ = (print_endline ("Env: " ^ (Environment.string_of (environment_of context))))
+	and _ = (Expression.string_of_expression expression)
+		|> (fun it -> print_endline ("Expr:" ^ it))
 	and type_of_variable var = TypeVariable.type_of var context in
 	match expression with
 	| Void -> PrimitiveType(CoreUnit)
@@ -70,42 +86,31 @@ let rec type_of
 	| Operation operation -> type_of_operation operation context
 	| If (var, _then, _else) ->
 			let conditional_check = Type.compare (type_of_variable var) (PrimitiveType(CoreBool))
-			and then_type = (type_of _then context) 
+			and then_type = (type_of _then context)
 			and else_type = (type_of _else context) in
 			let defined_by_user = Type.is_user_defined [then_type; else_type] in
 			if (not(conditional_check))
 			then (raise InvalidConditionalTypeOfIfExpression) else
-			if defined_by_user then then_type (** TODO: LCA of _then, _else *) else
+			if defined_by_user then then_type else
 			if (Type.compare then_type else_type) then then_type else
 				(raise (InvalidReturnTypeOfIfExpression
 							((string_of_type then_type) ^ " =/= " ^ (string_of_type else_type))))
-	
 	| Call (var, name, args) -> check_method_call var name args context
-	
-	| New (typ, args) ->
-	(* Check Fields' || Args Types *)
-			let result = UserDefinedType(typ) in
-			if (is_user_defined typ (program_of context))
-			then result else (raise ErrorInvalidNewType)
-	
+	| New (typ, args) -> check_new_object typ args context
 	| Cast (typ_as_string, var) ->
 			if ((is_user_defined typ_as_string (program_of context)) &&
 				(RelatedType.is_connected (UserDefinedType(typ_as_string))
 						(TypeVariable.type_of var context) (program_of context))) then
 				UserDefinedType(typ_as_string) else (raise UnableToCastType)
-	
 	| InstanceOf (var, typ_as_string) ->
 			if((is_user_defined typ_as_string (program_of context)) &&
 				(RelatedType.is_connected (UserDefinedType(typ_as_string))
 						(TypeVariable.type_of var context) (program_of context))) then
 				(PrimitiveType(CoreBool)) else (raise UnrelatedTypeException)
-	
 	| While (var, expr) ->
 			if (Type.compare (TypeVariable.type_of var context) (PrimitiveType(CoreBool))) then
 				let _ = (type_of expr context) in (PrimitiveType(CoreBool)) else
 				(raise UnableToCastVariableToBool)
-	
-	| _ -> PrimitiveType(CoreInt)
 
 and type_of_operation
 		(operation: operation)
@@ -151,7 +156,6 @@ and type_of_bool_operation
 	| Or (l, r) -> (type_of l) == (type_of r)
 	| Not expr -> (type_of expr) == (type_result)
 
-(** TODO Check if user defined type. *)
 and type_of_compare_operation
 		(operation: compare_operation)
 		(context: context): system_type =

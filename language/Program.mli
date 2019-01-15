@@ -13,3 +13,9 @@ val user_types_in: program -> Type.system_type list
 val exists: string -> program -> bool
 
 val duplications: program -> Class.class_declaration list
+
+val declared_methods_of: Class.class_declaration ->
+	program -> Method.method_declaration list
+	
+val declared_fields_of: Class.class_declaration -> 
+	program -> Field.field_declaration list

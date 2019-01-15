@@ -18,6 +18,7 @@ let exists class_name within =
 
 let classes_of = function Program classes -> classes
 
+
 let find_class typ within =
 	let name = (Type.string_of_type typ) in
 	let eq = fun it -> (Class.name_of_class it) = name
@@ -36,3 +37,32 @@ let duplications = function
 				| None -> duplicated_classes t acc
 				| Some cls -> duplicated_classes t (cls::acc) in
 		duplicated_classes classes []
+		
+let declared_methods_of cls in_program = 
+	match cls with
+	| Class.ClassDeclaration (_, _, methods) -> methods
+	| Class.InheritanceDeclaration (_, super, _, methods) ->
+			let super_type =  Type.UserDefinedType super in
+			let super_class = find_class super_type in_program in
+			match super_class with
+			| None -> []
+			| Some super_cls ->
+			methods @ ((Class.methods_of_class super_cls) |> 
+				(List.filter (fun x -> (not(List.exists 
+					(fun it -> (Method.name_of it) ==
+						 (Method.name_of x)) methods))))) 
+					
+		
+let declared_fields_of cls in_program = 
+	match cls with
+	| Class.ClassDeclaration (_, fields, _) -> fields
+	| Class.InheritanceDeclaration (_, super, fields, _) ->
+			let super_type =  Type.UserDefinedType super in
+			let super_class = find_class super_type in_program in
+			match super_class with
+			| None -> []
+			| Some super_cls ->
+			fields @ ((Class.fields_of_class super_cls) |> 
+				(List.filter (fun x -> not(List.exists 
+					(fun it -> (Field.name_of it) ==
+						 (Field.name_of x)) fields)))) 

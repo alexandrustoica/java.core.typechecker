@@ -8,7 +8,7 @@ open Expression
 let lastAssignment = Assign(VarWithField("this", "f2"), Var(VarWithName("z")))
 let last = Compose(lastAssignment, Var(VarWithName("z")))
 
-let thenExpr = Assign(VarWithName("z"), New("A", [VarWithName("m")]))
+let thenExpr = Assign(VarWithName("z"), New("A", [VarWithName("n")]))
 let elseExpr = Assign(VarWithName("z"), New("A", [VarWithName("n")]))
 let ifExpr = If(VarWithName("m"), thenExpr, elseExpr)
 

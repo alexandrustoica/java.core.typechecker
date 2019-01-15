@@ -4,6 +4,7 @@ exception DuplicatedElementFoundInClass
 exception NoEntryClassFoundInProgram
 exception NoEntryPointFunctionFoundInProgram
 exception DuplicatedClassDeclarationDetected
+exception InheritanceCycleWithinClassDeclarations
 
 let detect_duplicates = function
 	| Program.Program classes ->
@@ -28,8 +29,18 @@ let detect_entry_point in_program =
 
 let detect_duplicated_classes in_program =
 	match (Program.duplications in_program) with
-	| [] -> () 
+	| [] -> ()
 	| _ -> raise DuplicatedClassDeclarationDetected
+
+let transitive_set in_program =
+	Relation.extend (Relation.relations_in in_program)
+
+let verify_transitivity in_program =
+	let xs = transitive_set in_program in
+	let result = xs |> List.filter Relation.is_identity in
+	match result with
+	| [] -> true
+	| _ -> raise InheritanceCycleWithinClassDeclarations
 
 let type_of program =
 	let context = Context.Context(program, Environment.Environment([]))
@@ -38,4 +49,5 @@ let type_of program =
 	let _ = classes |> List.map type_of_class in
 	let _ = detect_duplicates program in
 	let _ = detect_entry_point program in
-	let _ = detect_duplicated_classes program in ()
+	let _ = detect_duplicated_classes program in
+	let _ = verify_transitivity program in ()

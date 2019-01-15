@@ -4,6 +4,9 @@ type relation = Relation of Type.system_type * Type.system_type
 let head = function Relation (it, _) -> it
 let tail = function Relation (_, it) -> it
 
+let is_identity = function
+	| Relation (left, right) -> Type.compare left right
+
 let compare left right =
 	match (left, right) with
 	| Relation (ll, rl), Relation (lr, rr) ->

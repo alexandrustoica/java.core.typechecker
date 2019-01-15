@@ -45,7 +45,7 @@ let string_of_class
 			"class " ^ name ^ "{\n" ^
 			List.fold_left (fun acc it -> (Field.string_of it) ^ "\n" ^ acc) "" fields ^
 			List.fold_left (fun acc it -> acc ^ "\n" ^ (Method.string_of it)) "" methods ^
-			"\n}"
+			"\n}"		
 
 let find_method_by name in_class =
 	let methods = methods_of_class in_class
