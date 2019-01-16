@@ -26,7 +26,7 @@ let rec string_of_expression = function
 			let result = t |> List.fold_left compose head in
 			"new " ^ name ^ "(" ^ result ^ ")"
 	| Call (var, name, []) -> (Variable.string_of var) ^ "." ^ name ^ "()"
-	| Call (var, name, h:: t) ->
+	| Call (var, name, h::t) ->
 			let head = Variable.string_of h 
 			and variable = Variable.string_of var
 			and compose =  fun acc it -> acc ^ "," ^ (Variable.string_of it) in

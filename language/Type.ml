@@ -43,6 +43,11 @@ let is_user_defined = function
 	| UserDefinedType _ -> true
 	| _ -> false
 
+let rec are_equal = function
+	| [] -> true
+	| [x; y] -> compare x y
+	| x::y::t -> (compare x y) && (are_equal t) 
+
 let is_user_defined types =
 	types
 	|> List.map (fun it -> is_user_defined it)
