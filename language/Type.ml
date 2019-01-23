@@ -46,7 +46,7 @@ let is_user_defined = function
 let rec are_equal = function
 	| [] -> true
 	| [x; y] -> compare x y
-	| x::y::t -> (compare x y) && (are_equal t) 
+	| x::y::t -> (compare x y) && (are_equal (y::t)) 
 
 let is_user_defined types =
 	types
