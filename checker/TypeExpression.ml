@@ -60,24 +60,20 @@ let check_new_object typ args context =
 					| false -> raise ErrorInvalidNewType
 					| _ -> result
 
-let rec type_of
-		(expression: expression)
-		(context: context): system_type =
-	let _ = (print_endline ("Env: " ^ (Environment.string_of (environment_of context))))
-	and _ = (Expression.string_of_expression expression)
-		|> (fun it -> print_endline ("Expr:" ^ it))
-	and type_of_variable var = TypeVariable.type_of var context in
+let rec type_of expression context =
+	let type_of_variable var = TypeVariable.type_of var context 
+	and program = Context.program_of context 
+	and environment = Context.environment_of context in
 	match expression with
 	| Void -> PrimitiveType(CoreUnit)
-	| Var var -> type_of_variable var
-	| LocalVar (typ, var, expr) ->
-			let new_record = record_of typ var in
-			let new_context = new_record |> (insert_in context) in
-			type_of expr new_context
+	| Var variable -> TypeVariable.type_of variable context 
+	| LocalVar (typ, variable, expr) ->
+			let new_record = Record.record_of typ variable in
+			type_of expr (insert_in context new_record)
 	| Assign (var, expr) ->
 			let variable_type = TypeVariable.type_of var context
 			and expression_type = type_of expr context in
-			let related = RelatedType.is_related variable_type expression_type (program_of context)
+			let related = RelatedType.is_related variable_type expression_type program
 			and error = (string_of_type variable_type) ^ " is not related with " ^ (string_of_type expression_type) in
 			if related then PrimitiveType(CoreUnit)
 			else (raise (UnrelatedTypesInAssignment error))
