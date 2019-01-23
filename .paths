@@ -14,3 +14,8 @@ language
 _build/language
 checker
 classes
+_build/checker
+_build/classes
+_build/environment
+_build/language
+_build/relation

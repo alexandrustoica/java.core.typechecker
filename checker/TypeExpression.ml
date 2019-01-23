@@ -174,12 +174,15 @@ and type_of_compare_operation
 	| EQ (l, r) -> let type_of_l = (type_of l) in check_exists type_of_l type_of_l (type_of r)
 	| NE (l, r) -> let type_of_l = (type_of l) in check_exists type_of_l type_of_l (type_of r)
 
+	
+	
 and validate_types_eq
 		(compareWith: system_type)
 		(result: system_type)
 		(l: system_type)
 		(r: system_type): system_type =
-	if ((Type.compare l compareWith) &&
-		(Type.compare r compareWith)) then result
-	else (raise ErrorInvalidTypeEq)
+	let value = Type.are_equal [l; compareWith; r] in
+	match value with
+	| true -> result
+	| false -> raise ErrorInvalidTypeEq
 
